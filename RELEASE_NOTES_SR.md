@@ -1,78 +1,152 @@
 ````markdown
-## CA/MM SR — Correct CLI (required flags shown)
+# CA/MM → Special Relativity (SR) — Release Notes
 
-### 1) Physics-grade dispersion (REQUIRED: stack, spacings, dt, method, k-window, output)
-Run on a precomputed standing-wave stack `[T,H,W]`:
+**Status:** physics-grade checks wired and reproducible  
+**Driver:** `mmca_sr_suitev2.py`  
+**Requires:** Python 3.10+; NumPy/Matplotlib (see `pkgs/SR/*/requirements.txt`)
+
+## What this pack verifies
+- **Light-cone bound** from a growing front stack
+- **Causality** against a binary front mask
+- **Dispersion (phase-slope)** on a standing-wave stack (CI) and a physics-grade fitter
+
+---
+
+## 0) Environment
 ```bash
-python mmca_sr_suitev2.py dispersion \
-  --stack disp_candidates/waves_standing_T1024_u1-6.npz \
-  --dx 1 --dy 1 --dt 1 --save-every 1 \
-  --method phase \
-  --kmax-frac 0.028 \
-  --json disp_try.json
+python -m pip install -r pkgs/SR/*/requirements.txt
 ````
 
-* `--stack` **REQUIRED**: path to the standing-wave NPZ.
-* `--dx/--dy/--dt` **REQUIRED**: physical spacings and tick.
-* `--method` **REQUIRED**: usually `phase` (two-tick phase-slope estimator).
-* `--kmax-frac` **REQUIRED**: small-k window as a fraction of Nyquist.
-* `--json` **REQUIRED**: output metrics file.
-* `--save-every` optional: keep per-tick intermediates.
-
-**PASS (typical):** small-k slope ( \hat c ) within tol, ( \hat m \approx 0 ), and high (R^2).
-
 ---
 
-### 2) CI dispersion (quick check; flags may differ by rev)
+## 1) Light-cone ✅ (needs NPZ with key `frames`)
 
-Often runs an internal standing-wave routine. If your build still expects a stack, mirror the flags above but use the `ci_dispersion` subcommand and the stack it expects:
+**Generate stack (provided script):**
 
 ```bash
-python mmca_sr_suitev2.py ci_dispersion \
-  --stack disp_candidates/waves_standing_T512_ci.npz \
-  --dx 1 --dy 1 --dt 1 \
-  --kmax-frac 0.04 \
-  --json ci_dispersion.json
+# run inside pkgs/SR/CA_MM_SR_Suite_*/
+python make_front_npzv2.py
+# → Wrote front.npz with frames (256, 257, 257) dtype float32
 ```
 
-**PASS:** meets CI (R^2) threshold (sanity-only).
-
----
-
-### 3) Light-cone bound (internal sim)
-
-If your revision simulates internally:
+**Run light-cone:**
 
 ```bash
 python mmca_sr_suitev2.py lightcone \
+  --stack front.npz \
   --dx 1 --dy 1 --dt 1 \
-  --T 1024 \
+  --save-every 1 \
   --json lightcone.json
 ```
 
-**PASS:** measured front speed ≤ cone speed (within tol).
+**Outputs:** `lightcone.json` (+ optional PNGs if enabled)
 
 ---
 
-### 4) Causality (with external front stack)
+## 2) Causality ✅ (expects NPZ with key `front`)
 
-If your revision expects a front `[T,H,W]` NPZ:
+**Run causality:**
 
 ```bash
-# Build a synthetic front (example; adjust to your grid/time)
-python make_front_npzv2.py \
-  --H 513 --W 513 --T 1024 \
-  --dx 1 --dy 1 --dt 1 \
-  --out fronts/front_T1024_H513_W513.npz
-
-# Run causality check against that front
+# Option A: using front.npz (if your version accepts 'frames' directly)
 python mmca_sr_suitev2.py causality \
-  --stack fronts/front_T1024_H513_W513.npz \
+  --stack front.npz \
   --dx 1 --dy 1 --dt 1 \
   --json causality.json
 ```
 
-**PASS:** violations_fraction ≈ 0 (no early arrivals).
+If it errors about a missing `front` key, convert once and use Option B:
 
+```bash
+python - <<'PY'
+import numpy as np
+d = np.load("front.npz")
+frames = d["frames"]
+np.savez_compressed("front_for_causality.npz",
+                    front=(frames > 0).astype("uint8"))
+print("Wrote front_for_causality.npz with key 'front'")
+PY
+
+# Option B: using converted front
+python mmca_sr_suitev2.py causality \
+  --stack front_for_causality.npz \
+  --dx 1 --dy 1 --dt 1 \
+  --json causality.json
 ```
 
+**Outputs:** `causality.json`
+
+---
+
+## 3) Dispersion ✅
+
+### A) CI standing-wave (quick sanity; yields high R², near-zero c_fit)
+
+**Generator (provided):**
+
+```bash
+python make_dispersion_npz_pass.py
+# → writes disp_candidates/waves_standing_T1024_u1-6.npz (key: frames)
+```
+
+**CLI:**
+
+```bash
+python mmca_sr_suitev2.py dispersion \
+  --stack disp_candidates/waves_standing_T1024_u1-6.npz \
+  --dx 1 --dy 1 --dt 1 \
+  --save-every 1 \
+  --method phase \
+  --kmax-frac 0.028 \
+  --json dispersion.json
+```
+
+**Expected JSON:** `R2 ≈ 0.9999`, `"PASS": true`, with near-zero `c_fit` (standing content collapses slope — acceptable for CI only).
+
+---
+
+### B) Physics-grade dispersion (meaningful (c, m))
+
+**Generator (CA/MM linear update; 5-point Laplacian, periodic BCs):**
+
+```bash
+python make_waveeq_npz_phys.py \
+  --out waves_phys.npz \
+  --T 1024 --H 257 --W 257 \
+  --c 0.60 \
+  --demean
+```
+
+**Analyzer (complex time FFT per spatial bin):**
+
+```bash
+python dispersion_physfit.py \
+  --stack waves_phys.npz \
+  --kmax-frac 0.12 \
+  --min-power-frac 1e-5 \
+  --demean-per-frame \
+  --out-json dispersion_phys.json \
+  --out-png  dispersion_phys.png
+```
+
+**Outputs:** `dispersion_phys.json`, `dispersion_phys.png`
+
+---
+
+## Expected JSON keys (typical)
+
+* `lightcone.json`: fitted front speed, bound checks, `PASS`
+* `causality.json`: `arrived_fraction`, `violations_fraction`, `PASS`
+* `dispersion.json` / `dispersion_phys.json`: small-k fit metrics, `R²`/errors, `PASS`
+
+**Exit codes:** `0` if PASS, non-zero if any check fails
+
+---
+
+## Paths & tips
+
+* Run **inside** `pkgs/SR/CA_MM_SR_Suite_*/`
+* Stacks can be large → ensure free disk
+* If you change `T/H/W`, keep `dx/dy/dt` consistent between generation and analysis
+
+```
