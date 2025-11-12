@@ -8,3 +8,6 @@ sr_all_summary.json
 
 # ignore release bundles
 *.tar.gz
+
+# ignore release bundles
+*.tar.gz
