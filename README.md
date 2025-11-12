@@ -2,15 +2,15 @@
 
 This repo shows SR kinematics emerging from **Conscious Agents / Markov Matrix** with only
 one-step-per-tick causal updates, a partial order (no backward edges), and counting.
-The full SR suite lives in `src/sr/poset/` and prints PASS/FAIL JSON.
+The full SR suite lives in `src/` and prints PASS/FAIL JSON.
 
 Quick run:
 ```bash
-cd src/sr/poset
+cd src
 chmod +x sr_poset_all.sh
 ./sr_poset_all.sh --fast
 cat sr_all_summary.json    # expect "ALL_PASS": true
-See src/sr/poset/README_SR.md for per-test CLI, math, and intuition.
+See src/README_SR.md for per-test CLI, math, and intuition.
 
 Minimal requirements
 printf "numpy\n" > requirements.txt
@@ -34,12 +34,12 @@ run: |
 python -m pip install -U pip
 pip install -r requirements.txt
 - name: Run SR fast battery
-working-directory: src/sr/poset
+working-directory: src
 run: |
 chmod +x sr_poset_all.sh
 ./sr_poset_all.sh --fast
 - name: Verify ALL_PASS
-working-directory: src/sr/poset
+working-directory: src
 run: |
 python - << 'PY'
 import json,sys
@@ -56,7 +56,7 @@ mkdir -p docs
 cat > docs/SR_Explainer.md << 'MD'
 
 SR from CA/MM — One-page intuition
-See src/sr/poset/README_SR.md for full CLI + math. This page summarizes the ideas.
+See src/README_SR.md for full CLI + math. This page summarizes the ideas.
 
 Light-cone: one step/tick ⇒ causal speed ĉ=1.
 
