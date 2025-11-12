@@ -11,3 +11,7 @@ sr_all_summary.json
 
 # ignore release bundles
 *.tar.gz
+
+# local-only landing blurb
+GITHUB_BLURB.md
+src/GITHUB_BLURB.md
