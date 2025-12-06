@@ -1,0 +1,27 @@
+{
+  "PASS_azimuthal_or_NA": true,
+  "PASS_frame_dragging_or_NA": true,
+  "azimuthal_flux": {
+    "H": 40,
+    "N": 1600,
+    "PASS_vector_azimuthal_flux_PP": null,
+    "VECTOR_AZIMUTHAL_FLUX_APPLICABLE": false,
+    "W": 40,
+    "case": "strong_pf010",
+    "notes": "STRICT PP N/A: feeder TO-mass ring at 40x40 too thin to support stable azimuthal edge-count bias statistic.",
+    "observable": "vector_azimuthal_flux_v1"
+  },
+  "case": "strong_pf010",
+  "frame_dragging": {
+    "FRAME_DRAGGING_APPLICABLE": false,
+    "H": 40,
+    "N": 1600,
+    "PASS_frame_dragging_PP": null,
+    "W": 40,
+    "case": "strong_pf010",
+    "notes": "STRICT PP N/A: sink-heavy pf010 mass core yields narrow feeder band; opposite-arc hop-asymmetry proxy not admissible at 40x40.",
+    "observable": "frame_dragging_proxy_v1"
+  },
+  "notes": "STRICT PP vector pack v1. Aggregates vector observables with admissibility gates. No PDE, no Laplacian/Poisson, no GR ansatz, no regression.",
+  "overall_PASS_vector_strict_PP_v1": true
+}

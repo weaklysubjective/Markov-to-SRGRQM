@@ -1,0 +1,10 @@
+{
+  "H": 40,
+  "N": 1600,
+  "PASS_vector_azimuthal_flux_PP": null,
+  "VECTOR_AZIMUTHAL_FLUX_APPLICABLE": false,
+  "W": 40,
+  "case": "strong_pf010",
+  "notes": "STRICT PP N/A: feeder TO-mass ring at 40x40 too thin to support stable azimuthal edge-count bias statistic.",
+  "observable": "vector_azimuthal_flux_v1"
+}

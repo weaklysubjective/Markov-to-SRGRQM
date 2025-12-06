@@ -1,0 +1,17 @@
+{
+  "ALL_PASS_vector_strict_PP_v1": false,
+  "n_packs": 2,
+  "notes": "STRICT PP vector suite v1. Aggregates vector packs built from azimuthal flux and frame-dragging proxies with admissibility gates. No new physics is introduced here.",
+  "packs": [
+    {
+      "case": "ms080",
+      "overall_PASS_vector_strict_PP_v1": false,
+      "pack": "src/gr_strict_pp_vector/PP_vector_pack_v1_40x40_ms080.json"
+    },
+    {
+      "case": "strong_pf010",
+      "overall_PASS_vector_strict_PP_v1": true,
+      "pack": "src/gr_strict_pp_vector/PP_vector_pack_v1_40x40_strong_pf010.json"
+    }
+  ]
+}

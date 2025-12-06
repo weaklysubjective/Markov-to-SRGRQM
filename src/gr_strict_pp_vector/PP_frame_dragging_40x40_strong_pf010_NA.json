@@ -1,0 +1,10 @@
+{
+  "FRAME_DRAGGING_APPLICABLE": false,
+  "H": 40,
+  "N": 1600,
+  "PASS_frame_dragging_PP": null,
+  "W": 40,
+  "case": "strong_pf010",
+  "notes": "STRICT PP N/A: sink-heavy pf010 mass core yields narrow feeder band; opposite-arc hop-asymmetry proxy not admissible at 40x40.",
+  "observable": "frame_dragging_proxy_v1"
+}

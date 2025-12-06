@@ -1,0 +1,30 @@
+{
+  "PASS_azimuthal_or_NA": false,
+  "PASS_frame_dragging_or_NA": true,
+  "azimuthal_flux": {
+    "H": 40,
+    "N": 1600,
+    "PASS_vector_azimuthal_flux_PP": false,
+    "VECTOR_AZIMUTHAL_FLUX_APPLICABLE": true,
+    "W": 40,
+    "azimuthal_bias": -0.027522935779816515,
+    "bias_threshold": 0.05,
+    "ccw_count": 56,
+    "cw_count": 53,
+    "edges_curved": "edges_ca_v3_mass_ms080_40x40.txt",
+    "edges_in_band_total": 109,
+    "edges_used_near_azimuthal": 109,
+    "mass_mask": "PP_mass_mask_40x40.npy",
+    "min_edges_used": 15,
+    "n_orbit_nodes": 80,
+    "n_ring_ordered": 80,
+    "notes": "STRICT PP vector azimuthal flux bias v1. Ring ordering uses grid angles as LABELS ONLY. Observable counts directed edges inside a Markov-defined ring band that step forward (CW) vs backward (CCW) within a small index window. PASS is a nonzero azimuthal bias above threshold. No PDE, no Laplacian/Poisson, no GR ansatz, no regression.",
+    "orbit_mask": "PP_orbit_markov_ring_40x40_ms080_v1.npy",
+    "other_count": 0,
+    "step_window": 5
+  },
+  "case": "ms080",
+  "frame_dragging": null,
+  "notes": "STRICT PP vector pack v1. Aggregates vector observables with admissibility gates. No PDE, no Laplacian/Poisson, no GR ansatz, no regression.",
+  "overall_PASS_vector_strict_PP_v1": false
+}
