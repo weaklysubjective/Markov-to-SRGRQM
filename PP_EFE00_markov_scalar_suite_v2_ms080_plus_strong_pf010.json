@@ -1,0 +1,15 @@
+{
+  "n_packs": 2,
+  "packs": [
+    {
+      "pack": "PP_EFE00_markov_scalar_pack_v3_tau_v2_ms080.json",
+      "overall_PASS_scalar_EFE_strict_PP_v3": true
+    },
+    {
+      "pack": "PP_EFE00_markov_scalar_pack_v3_tau_v2_strong_pf010.json",
+      "overall_PASS_scalar_EFE_strict_PP_v3": false
+    }
+  ],
+  "ALL_PASS_scalar_EFE_strict_PP_v3": false,
+  "notes": "STRICT PP scalar EFE suite v2. Aggregates v3 scalar packs built purely from Markov/trace-derived geometry and observables (scalar EFE, perihelion tau, Shapiro tau, deflection basin). This script introduces no new physics or geometry; it only reports whether all input packs have overall_PASS_scalar_EFE_strict_PP_v3 = true."
+}

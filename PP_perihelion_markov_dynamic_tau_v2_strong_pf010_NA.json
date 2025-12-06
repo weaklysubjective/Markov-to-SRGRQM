@@ -1,0 +1,12 @@
+{
+  "case": "strong_pf010",
+  "H": 40,
+  "W": 40,
+  "N": 1600,
+  "edges_curved": "edges_ca_v3_strong_pf010_40x40.txt",
+  "PERIHELION_DYNAMIC_APPLICABLE": false,
+  "PASS_perihelion_markov_dynamic_PP": null,
+  "n_scc": 1600,
+  "max_scc_size": 1,
+  "notes": "STRICT PP: pf010 curved directed graph at 40x40 has no nontrivial directed SCCs; dynamic perihelion requires cycle-capable subgraph. Marked N/A."
+}
