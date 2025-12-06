@@ -1,0 +1,14 @@
+{
+  "H": 40,
+  "N": 1600,
+  "PASS_vector_circulation_PP": null,
+  "VECTOR_CIRCULATION_APPLICABLE": false,
+  "W": 40,
+  "case": "ms080",
+  "definition": "Markov-ring + directed SCC eligibility",
+  "largest_scc_size": 1,
+  "n_scc_in_ring": 80,
+  "notes": "STRICT PP structural N/A certificate. Markov-defined ring band contains no directed cycles (largest SCC size = 1), so circulation is not admissible at 40x40 for ms080 under this v2 definition. No PDE, no Euclidean injection, no GR ansatz.",
+  "observable": "vector_circulation",
+  "ring_band_size": 80
+}
