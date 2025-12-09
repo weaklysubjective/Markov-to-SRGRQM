@@ -1,0 +1,21 @@
+{
+  "H": 512,
+  "W": 512,
+  "N": 262144,
+  "device": "cuda",
+  "edges_flat": "edges_ca_v3_flat_512x512_PPV1.txt",
+  "edges_curved": "edges_ca_v3_mass_ms080_512x512_PPV1.txt",
+  "mass_mask": "PP_mass_mask_512x512_mass_ms080_PPV1.npy",
+  "src_row_label": 231,
+  "src_col_label": 164,
+  "steps": 800,
+  "norm_finite_mass_flat": 0.01869613789554559,
+  "norm_finite_mass_curved": 0.5,
+  "markov_distance_to_mass": {
+    "D_flat": 1.0401823895586704,
+    "D_curved": 0.0,
+    "closer_curved_than_flat": null
+  },
+  "PASS_deflection_markov_front_PP": true,
+  "notes": "STRICT PP deflection via finite-time Markov fronts (SPARSE, scale-safe). Mass basin defined ONLY by finite Markov hitting time to the trace-derived mass core on the CURVED graph. PASS condition uses basin-mass shift: PASS iff norm_finite_mass_curved > norm_finite_mass_flat. No Laplacian/Poisson, no PDE, no Euclidean metric assumptions, no GR ansatz, no regression."
+}
