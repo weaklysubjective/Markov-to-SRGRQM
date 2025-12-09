@@ -2,20 +2,43 @@
   "H": 512,
   "W": 512,
   "N": 262144,
-  "device": "cuda",
+  "device_used": "cuda",
   "edges_flat": "edges_ca_v3_flat_512x512_PPV1.txt",
   "edges_curved": "edges_ca_v3_strong_pf010_512x512_PPV1.txt",
   "mass_mask": "PP_mass_mask_512x512_strong_pf010_PPV1.npy",
+  "ring_mask": "PP_orbit_ring_mask_512x512_strong_pf010_PPV1.npy",
+  "src_auto": "ring_mid",
+  "ring_size": 319,
+  "src_index": 118436,
   "src_row_label": 231,
   "src_col_label": 164,
   "steps": 800,
+  "front_sum_flat": 1.0,
+  "front_sum_curved": 1.0,
+  "warn_front_normalization": false,
   "norm_finite_mass_flat": 0.01752302130412347,
   "norm_finite_mass_curved": 1.0,
   "markov_distance_to_mass": {
     "D_flat": 0.9929767919498069,
     "D_curved": 0.0,
-    "closer_curved_than_flat": null
+    "closer_by_norm": true,
+    "closer_by_D": true,
+    "eps_norm": 1e-08,
+    "eps_D": 0.0,
+    "min_norm": 1e-06
   },
   "PASS_deflection_markov_front_PP": true,
-  "notes": "STRICT PP deflection via finite-time Markov fronts (SPARSE, scale-safe). Mass basin defined ONLY by finite Markov hitting time to the trace-derived mass core on the CURVED graph. PASS condition uses basin-mass shift: PASS iff norm_finite_mass_curved > norm_finite_mass_flat. No Laplacian/Poisson, no PDE, no Euclidean metric assumptions, no GR ansatz, no regression."
+  "PASS_reason": "both_norm_and_D_criteria",
+  "hitting_time_meta": {
+    "ht_tol": 1e-05,
+    "ht_maxiter": 20000,
+    "ht_check_every": 50,
+    "ht_damping": 1.0,
+    "ht_last_max_dev": 0.0,
+    "ht_runtime_sec": 0.10805177688598633,
+    "reachable_open_count": 556,
+    "mass_count": 80
+  },
+  "runtime_sec": 1.4174981117248535,
+  "notes": "STRICT PP deflection via sparse finite-time Markov fronts. Row distribution evolved by p_{t+1}=p_t@P using P^T@v implementation. Mass core is trace-derived mask only. Markov distance to mass defined via matrix-free mean hitting times on the CURVED graph with boundary h[M]=0. No PDE, no Poisson/Laplacian field injection, no Euclidean metric, no GR ansatz, no regression. PASS requires BOTH: (1) norm_curved > norm_flat + eps_norm and (2) D_curved < D_flat - eps_D with minimum basin mass min_norm; otherwise INDETERMINATE (PASS=None)."
 }
