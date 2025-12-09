@@ -63,6 +63,63 @@ Expected top-level truth:
 * strong_pf010 pack overall ❌
 * ALL_PASS ❌
 
+
+---
+
+## 11) PPV1 provenance addendum (40×40)
+
+We introduced **PPV1 edges-from-trace** to remove “mystery edges” and ensure
+case-to-case reproducibility under STRICT PP.
+
+### 11.1 Provenance check (confirmed)
+
+The PPV1 τ-geometry artifacts are correctly wired:
+
+**ms080**
+- edges_curved: `edges_ca_v3_mass_ms080_40x40_PPV1.txt`
+- mass_mask: `PP_mass_mask_40x40_ms080_PPV1.npy`
+- trace_weights: `trace_weights_ca_v3_mass_ms080_40x40.txt`
+
+**strong_pf010**
+- edges_curved: `edges_ca_v3_strong_pf010_40x40_PPV1.txt`
+- mass_mask: `PP_mass_mask_40x40_strong_pf010_PPV1.npy`
+- trace_weights: `trace_weights_ca_v3_strong_pf010_40x40.txt`
+
+This confirms no PPV1 provenance mixing in the τ-geometry JSONs.
+
+### 11.2 PPV1 scalar observables at 40×40
+
+**strong_pf010**
+- ✅ PPV1 Shapiro-like τ now **PASS** using anchors chosen from the
+  trace-derived mass center row and a far-row control path:
+  - `src_through=1520`, `dst_through=1559`
+  - `src_around=0`, `dst_around=39`
+  - Artifact:
+    `src/gr_strict_pp_scalar/PP_Shapiro_markov_tau_40x40_strong_pf010_PPV1.json`
+- ❌ PPV1 deflection remains **negative evidence** at this scale:
+  - Artifact:
+    `src/gr_strict_pp_scalar/PP_deflection_markov_front_40x40_strong_pf010_row39_TIMEQ_PP_v3_PPV1.json`
+
+**ms080**
+- PPV1 deflection at 40×40 appears to be trending toward an
+  **admissibility-limited regime** under this rule (may return `None`
+  depending on applicability gating).
+  This is treated as a provenance/admissibility diagnostic, not a physics “loss.”
+
+### 11.3 Interpretation
+
+At 40×40, **PPV1 is functioning as a strict provenance/admissibility lens**:
+it may reduce contrast for some observables while clarifying which results
+are genuinely supported by trace-derived directed topology.
+
+This does not overwrite the non-PPV1 robustness conclusion:
+- ms080 remains the canonical “full green” scalar strict-PP case.
+- strong_pf010 remains a valid robustness boundary case with:
+  scalar sign structure + Shapiro support, but deflection negative at this scale.
+
+---
+
+
 ---
 
 ## 4) Repro CLIs
@@ -313,6 +370,10 @@ No new geometry assumptions needed.
    * A third robustness case to see whether pf010 is an outlier
      or a representative of a broader “sink-dominant” class.
 
+1) Generate canonical `_PPV1` edges for ms080 + pf010 at 40×40.
+2) Re-run any 40×40 strict-PP scalar/vector admissibility checks using `_PPV1`.
+3) Only then proceed to ≥512 with the same canonical rule.
+
 ---
 
 ## 10) Final status statement (copy/paste)
@@ -327,4 +388,29 @@ No new geometry assumptions needed.
 
 ```
 ```
+
+---
+
+## 9.5) Edge provenance (IMPORTANT for scale)
+
+We discovered that legacy pf010 40×40 edges were produced during exploratory
+one-off generation and **cannot be reliably reverse-engineered from the node-weight
+trace file alone**.
+
+Therefore, for STRICT PP provenance and any ≥512 scaling claims:
+
+- We introduce a **canonical edges-from-trace rule** via
+  `PP_build_edges_from_trace_v1.py`.
+- Canonical outputs must be saved with suffix:
+
+  * `_PPV1`
+
+Example canonical naming:
+
+- `edges_ca_v3_strong_pf010_40x40_PPV1.txt`
+- `edges_ca_v3_mass_ms080_40x40_PPV1.txt`
+
+**Policy:**
+- Legacy edges are preserved for historical runs.
+- **All new strict-PP robustness and scale work must use `_PPV1` edges.**
 
