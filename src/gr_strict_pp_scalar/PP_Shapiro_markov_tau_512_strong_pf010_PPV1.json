@@ -1,0 +1,96 @@
+{
+  "H": 512,
+  "N": 262144,
+  "PASS_Shapiro_markov_tau": true,
+  "W": 512,
+  "curved_detail_around": {
+    "H": 512,
+    "N": 262144,
+    "W": 512,
+    "commute_mean": 1497561796238694.0,
+    "commute_median": 1497561796238694.0,
+    "deg_mean": 1.5580215454101562,
+    "edges_file": "edges_ca_v3_strong_pf010_512x512_PPV1.txt",
+    "n_pairs": 1,
+    "pairs": [
+      {
+        "R_eff": 3666666167.772605,
+        "commute": 1497561796238694.0,
+        "dst": 262143,
+        "src": 0
+      }
+    ],
+    "vol": 408426.0
+  },
+  "curved_detail_through": {
+    "H": 512,
+    "N": 262144,
+    "W": 512,
+    "commute_mean": 1701775066071212.8,
+    "commute_median": 1701775066071212.8,
+    "deg_mean": 1.5580215454101562,
+    "edges_file": "edges_ca_v3_strong_pf010_512x512_PPV1.txt",
+    "n_pairs": 1,
+    "pairs": [
+      {
+        "R_eff": 4166666828.4370065,
+        "commute": 1701775066071212.8,
+        "dst": 126216,
+        "src": 126136
+      }
+    ],
+    "vol": 408426.0
+  },
+  "curved_tau_around": 1497561796238694.0,
+  "curved_tau_through": 1701775066071212.8,
+  "d_tau_around": 1497561784856826.8,
+  "d_tau_through": 1701775063136920.8,
+  "dst_around": 262143,
+  "dst_through": 126216,
+  "edges_curved": "edges_ca_v3_strong_pf010_512x512_PPV1.txt",
+  "edges_flat": "edges_ca_v3_flat_512x512_PPV1.txt",
+  "flat_detail_around": {
+    "H": 512,
+    "N": 262144,
+    "W": 512,
+    "commute_mean": 11381867.351097642,
+    "commute_median": 11381867.351097642,
+    "deg_mean": 4.0,
+    "edges_file": "edges_ca_v3_flat_512x512_PPV1.txt",
+    "n_pairs": 1,
+    "pairs": [
+      {
+        "R_eff": 10.854594565484659,
+        "commute": 11381867.351097642,
+        "dst": 262143,
+        "src": 0
+      }
+    ],
+    "vol": 1048576.0
+  },
+  "flat_detail_through": {
+    "H": 512,
+    "N": 262144,
+    "W": 512,
+    "commute_mean": 2934291.9593134047,
+    "commute_median": 2934291.9593134047,
+    "deg_mean": 4.0,
+    "edges_file": "edges_ca_v3_flat_512x512_PPV1.txt",
+    "n_pairs": 1,
+    "pairs": [
+      {
+        "R_eff": 2.798358878434567,
+        "commute": 2934291.9593134047,
+        "dst": 126216,
+        "src": 126136
+      }
+    ],
+    "vol": 1048576.0
+  },
+  "flat_tau_around": 11381867.351097642,
+  "flat_tau_through": 2934291.9593134047,
+  "notes": "STRICT PP Shapiro Markov tau v2 (sparse). Commute times computed from graph-effective resistance using sparse symmetric Laplacian and CG solves for the specified pair(s). No PDE, no Poisson/Laplacian field injection, no Euclidean radius assumptions, no GR ansatz, no regression.",
+  "runtime_sec": 16.385997772216797,
+  "src_around": 0,
+  "src_through": 126136
+}

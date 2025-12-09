@@ -1,0 +1,98 @@
+{
+  "FEEDER_SHEAR_APPLICABLE": true,
+  "H": 512,
+  "N": 262144,
+  "PASS_vector_feeder_shear_PP": false,
+  "W": 512,
+  "band_hi": 3,
+  "band_hi_q": 0.7,
+  "band_lo": 2,
+  "band_lo_q": 0.6,
+  "band_size": 427,
+  "best_opposite_pair": {
+    "eff_a": 1.0,
+    "eff_b": 1.0,
+    "sector_a": 0,
+    "sector_b": 4,
+    "shear": 0.0,
+    "size_a": 107,
+    "size_b": 28
+  },
+  "best_shear": 0.0,
+  "edges_curved": "edges_ca_v3_mass_ms080_512x512_PPV1.txt",
+  "mass_mask": "PP_mass_mask_512x512_mass_ms080_PPV1.npy",
+  "min_band_nodes": 20,
+  "min_sector_nodes": 5,
+  "n_sectors": 8,
+  "notes": "STRICT PP vector feeder-shear v1. Distance is directed Markov hop distance TO mass (multi-source reverse BFS). Feeder band is defined only by that operational distance. Angles are LABELS ONLY to bin nodes into opposite sectors. Vector proxy is asymmetry in 'inflow efficiency': fraction of nodes with an outgoing edge that reduces TO-mass distance by 1. No PDE, no Laplacian/Poisson, no GR ansatz, no regression.",
+  "opposite_pairs": [
+    {
+      "eff_a": 1.0,
+      "eff_b": 1.0,
+      "sector_a": 0,
+      "sector_b": 4,
+      "shear": 0.0,
+      "size_a": 107,
+      "size_b": 28
+    },
+    {
+      "eff_a": 1.0,
+      "eff_b": 1.0,
+      "sector_a": 1,
+      "sector_b": 5,
+      "shear": 0.0,
+      "size_a": 72,
+      "size_b": 18
+    },
+    {
+      "eff_a": 1.0,
+      "eff_b": 1.0,
+      "sector_a": 2,
+      "sector_b": 6,
+      "shear": 0.0,
+      "size_a": 37,
+      "size_b": 65
+    },
+    {
+      "eff_a": 1.0,
+      "eff_b": 1.0,
+      "sector_a": 3,
+      "sector_b": 7,
+      "shear": 0.0,
+      "size_a": 42,
+      "size_b": 58
+    }
+  ],
+  "reachable_to_mass_count": 877,
+  "sector_inflow_eff": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "sector_size": [
+    107,
+    72,
+    37,
+    42,
+    28,
+    18,
+    65,
+    58
+  ],
+  "sector_stepin_count": [
+    107,
+    72,
+    37,
+    42,
+    28,
+    18,
+    65,
+    58
+  ],
+  "shear_threshold": 0.15
+}

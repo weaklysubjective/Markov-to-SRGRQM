@@ -1,0 +1,106 @@
+{
+  "H": 512,
+  "N": 262144,
+  "W": 512,
+  "band_reports": [
+    {
+      "band_hi": 3,
+      "band_lo": 2,
+      "band_size": 427,
+      "hi_q": 0.7,
+      "lo_q": 0.6,
+      "scc": {
+        "largest_scc_size": 1,
+        "n_scc": 427,
+        "top5_scc_sizes": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "band_hi": 3,
+      "band_lo": 2,
+      "band_size": 427,
+      "hi_q": 0.75,
+      "lo_q": 0.65,
+      "scc": {
+        "largest_scc_size": 1,
+        "n_scc": 427,
+        "top5_scc_sizes": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "band_hi": 3,
+      "band_lo": 2,
+      "band_size": 427,
+      "hi_q": 0.8,
+      "lo_q": 0.7,
+      "scc": {
+        "largest_scc_size": 1,
+        "n_scc": 427,
+        "top5_scc_sizes": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "band_hi": 3,
+      "band_lo": 2,
+      "band_size": 427,
+      "hi_q": 0.85,
+      "lo_q": 0.75,
+      "scc": {
+        "largest_scc_size": 1,
+        "n_scc": 427,
+        "top5_scc_sizes": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "band_hi": 4,
+      "band_lo": 3,
+      "band_size": 175,
+      "hi_q": 0.9,
+      "lo_q": 0.8,
+      "scc": {
+        "largest_scc_size": 1,
+        "n_scc": 175,
+        "top5_scc_sizes": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      }
+    }
+  ],
+  "edges_curved": "edges_ca_v3_mass_ms080_512x512_PPV1.txt",
+  "has_positive_to_mass_distances": true,
+  "mass_core_size": 80,
+  "mass_mask": "PP_mass_mask_512x512_mass_ms080_PPV1.npy",
+  "mass_outdeg_to_nonmass": 0,
+  "mass_outdeg_total": 0,
+  "notes": "STRICT PP admissibility probe. Computes directed TO-mass hop distances and examines band thickness and SCC availability as prerequisites for vector ring/arc observables. No PDE, no Laplacian/Poisson, no regression.",
+  "reachable_to_mass_count": 877,
+  "reachable_to_mass_frac": 0.003345489501953125
+}
