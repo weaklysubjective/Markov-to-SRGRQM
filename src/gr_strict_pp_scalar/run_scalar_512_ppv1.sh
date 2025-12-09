@@ -1,4 +1,4 @@
-i#!/usr/bin/env bash
+#!/usr/bin/env bash
 # run_scalar_512_ppv1.sh
 #
 # STRICT PP Scalar 512 one-command runner wrapper.
