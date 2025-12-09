@@ -1,0 +1,25 @@
+{
+  "H": 512,
+  "N": 262144,
+  "W": 512,
+  "band_hi": 1,
+  "band_lo": 1,
+  "edges": "edges_ca_v3_strong_pf010_512x512_PPV1.txt",
+  "hist_preview": {
+    "0": 80,
+    "1": 319,
+    "2": 175,
+    "3": 49,
+    "4": 12,
+    "5": 1
+  },
+  "mass_out": "PP_mass_mask_512x512_strong_pf010_PPV1.npy",
+  "mass_topk": 80,
+  "n_edges": 204213,
+  "notes": "STRICT PP masks-from-PPV1 v1. Mass core = TOPK(trace weights). Orbit band = directed TO-mass hop shell(s) on adjacency. No PDE, no Laplacian/Poisson, no GR ansatz, no regression.",
+  "orbit_out": "PP_orbit_ring_mask_512x512_strong_pf010_PPV1.npy",
+  "reachable_to_mass": 636,
+  "ring_size": 319,
+  "sink_frac_outdeg0": 0.22098922729492188,
+  "trace_weights": "trace_weights_ca_v3_strong_pf010_512x512.txt"
+}
