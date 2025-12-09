@@ -141,20 +141,49 @@ def load_edges_as_adjacency(path: str, N: int) -> List[List[int]]:
     return adj
 
 
-def build_P_from_adj(adj: List[List[int]], device: torch.device) -> torch.Tensor:
-    N = len(adj)
-    # Build dense P (N x N) for N=1600 OK.
-    P = torch.zeros((N, N), dtype=torch.float64, device=device)
-    for i in range(N):
-        neigh = adj[i]
-        if len(neigh) == 0:
-            P[i, i] = 1.0
-        else:
-            w = 1.0 / float(len(neigh))
-            idx = torch.tensor(neigh, dtype=torch.int64, device=device)
-            P[i, idx] = w
+def build_P_from_adj(adj, device="cpu"):
+    """
+    Build row-stochastic Markov operator P from adjacency.
+    STRICT PP: uses only graph edges; no geometry; no dense NxN.
+    adj: scipy.sparse CSR/COO with nonnegative weights (typically 1s).
+    Returns: torch.sparse_coo_tensor on device (float64).
+    """
+    import numpy as np
+    import torch
+    import scipy.sparse as sp
+
+    adj = adj.tocsr()
+    N = adj.shape[0]
+
+    # Row sums
+    deg = np.asarray(adj.sum(axis=1)).ravel()
+    deg = np.where(deg == 0, 1.0, deg)
+
+    coo = adj.tocoo()
+    rows = coo.row.astype(np.int64)
+    cols = coo.col.astype(np.int64)
+    weights = coo.data.astype(np.float64)
+
+    # Row-stochastic values
+    vals = weights / deg[rows]
+
+    r = torch.from_numpy(rows).to(device=device)
+    c = torch.from_numpy(cols).to(device=device)
+    v = torch.from_numpy(vals).to(device=device, dtype=torch.float64)
+
+    idx = torch.stack([r, c], dim=0)
+    P = torch.sparse_coo_tensor(
+        idx, v, size=(N, N), dtype=torch.float64, device=device
+    ).coalesce()
     return P
 
+def apply_P(P, x):
+    import torch
+    if getattr(P, "is_sparse", False):
+        if x.ndim == 1:
+            return torch.sparse.mm(P, x.unsqueeze(1)).squeeze(1)
+        return torch.sparse.mm(P, x)
+    return P @ x
 
 def multisource_bfs(adj: List[List[int]], sources: np.ndarray) -> np.ndarray:
     """

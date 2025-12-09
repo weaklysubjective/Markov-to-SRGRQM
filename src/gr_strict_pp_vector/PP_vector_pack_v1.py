@@ -11,6 +11,8 @@ def main():
     ap.add_argument("--azimuthal_json", required=False, default=None)
     ap.add_argument("--frame_dragging_json", required=False, default=None)
     ap.add_argument("--output", required=True)
+    ap.add_argument("--feeder_shear_json", required=False, default=None)
+
     args = ap.parse_args()
 
     P = {
@@ -43,9 +45,23 @@ def main():
         P["frame_dragging"] = None
         P["PASS_frame_dragging_or_NA"] = True
 
+    # --- Feeder shear ---
+    if args.feeder_shear_json:
+        fs = load(args.feeder_shear_json)
+        P["feeder_shear"] = fs
+        applicable = bool(fs.get("FEEDER_SHEAR_APPLICABLE"))
+        PAS = fs.get("PASS_vector_feeder_shear_PP")
+        P["PASS_feeder_shear_or_NA"] = True if not applicable else bool(PAS)
+    else:
+        P["feeder_shear"] = None
+        P["PASS_feeder_shear_or_NA"] = True
+
+
     # Overall vector PASS (strict PP logic)
     P["overall_PASS_vector_strict_PP_v1"] = bool(
-        P["PASS_azimuthal_or_NA"] and P["PASS_frame_dragging_or_NA"]
+        P["PASS_azimuthal_or_NA"]
+        and P["PASS_frame_dragging_or_NA"]
+        and P["PASS_feeder_shear_or_NA"]
     )
 
     with open(args.output, "w") as f:
