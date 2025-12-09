@@ -1,0 +1,171 @@
+{
+  "N": 262144,
+  "H": 512,
+  "W": 512,
+  "edges_flat": "edges_ca_v3_flat_512x512_PPV1.txt",
+  "edges_curved": "edges_ca_v3_mass_ms080_512x512_PPV1.txt",
+  "trace_weights": "trace_weights_ca_v3_mass_ms080_512x512.txt",
+  "mass_mode": "topk_500",
+  "mass_quantile": 0.995,
+  "mass_topk": 500,
+  "mass_threshold": null,
+  "mass_mask": null,
+  "mass_threshold_used": 1.118146972656e-05,
+  "n_mass_nodes": 500,
+  "device": "cuda",
+  "symmetrize_P": false,
+  "shell_bands": [
+    {
+      "rmin": 2,
+      "rmax": 3
+    },
+    {
+      "rmin": 3,
+      "rmax": 4
+    },
+    {
+      "rmin": 4,
+      "rmax": 5
+    },
+    {
+      "rmin": 5,
+      "rmax": 6
+    }
+  ],
+  "shells": [
+    {
+      "band_index": 0,
+      "rmin": 2,
+      "rmax": 3,
+      "n_shell_flat": 3058,
+      "n_shell_curved": 2750,
+      "n_shell_intersect": 2750,
+      "valid": true,
+      "G00_stats_mass_core_shell": {
+        "count": 500,
+        "mean": -0.7742322703115584,
+        "std": 0.07212385507393716,
+        "min": -0.9997268860858025,
+        "max": -0.6666666666666665,
+        "q25": -0.75,
+        "median": -0.75,
+        "q75": -0.75
+      }
+    },
+    {
+      "band_index": 1,
+      "rmin": 3,
+      "rmax": 4,
+      "n_shell_flat": 4202,
+      "n_shell_curved": 3592,
+      "n_shell_intersect": 3590,
+      "valid": true,
+      "G00_stats_mass_core_shell": {
+        "count": 500,
+        "mean": -0.9042583282148653,
+        "std": 0.046690641468905635,
+        "min": -0.999590849323013,
+        "max": -0.8,
+        "q25": -0.9038320209973754,
+        "median": -0.8888888888888888,
+        "q75": -0.8888888888888888
+      }
+    },
+    {
+      "band_index": 2,
+      "rmin": 4,
+      "rmax": 5,
+      "n_shell_flat": 5806,
+      "n_shell_curved": 4960,
+      "n_shell_intersect": 4784,
+      "valid": true,
+      "G00_stats_mass_core_shell": {
+        "count": 500,
+        "mean": -0.9468906181318741,
+        "std": 0.030844163658443276,
+        "min": -0.9995326971541133,
+        "max": -0.85,
+        "q25": -0.975899293959628,
+        "median": -0.9375,
+        "q75": -0.9330379138746551
+      }
+    },
+    {
+      "band_index": 3,
+      "rmin": 5,
+      "rmax": 6,
+      "n_shell_flat": 7141,
+      "n_shell_curved": 6061,
+      "n_shell_intersect": 5650,
+      "valid": true,
+      "G00_stats_mass_core_shell": {
+        "count": 500,
+        "mean": -0.9677032700392963,
+        "std": 0.01914166176391032,
+        "min": -0.9995927065986406,
+        "max": -0.9189189189189189,
+        "q25": -0.9853562725707656,
+        "median": -0.9640024977162123,
+        "q75": -0.9555235185802764
+      }
+    }
+  ],
+  "ht_tol": 1e-05,
+  "ht_maxiter": 40000,
+  "ht_check_every": 50,
+  "T00_stats_all": {
+    "count": 262144,
+    "mean": 3.814697265625e-06,
+    "std": 2.3416099562826586e-06,
+    "min": 3.8146972656249324e-07,
+    "max": 1.4781469726559737e-05,
+    "q25": 1.7314697265629694e-06,
+    "median": 3.5314697265619374e-06,
+    "q75": 5.331469726562905e-06
+  },
+  "G00_med_stats_all": {
+    "count": 262144,
+    "mean": -0.9899284039951539,
+    "std": 0.04236100660529289,
+    "min": -0.9998551703506925,
+    "max": 0.0,
+    "q25": -0.9991659817205616,
+    "median": -0.9984865155994193,
+    "q75": -0.9966316128168571
+  },
+  "T00_stats_mass_core": {
+    "count": 500,
+    "mean": 1.1730469726559792e-05,
+    "std": 6.686097516488852e-07,
+    "min": 1.1181469726559802e-05,
+    "max": 1.4781469726559737e-05,
+    "q25": 1.1181469726559802e-05,
+    "median": 1.1631469726559794e-05,
+    "q75": 1.2081469726559785e-05
+  },
+  "G00_med_stats_mass_core": {
+    "count": 500,
+    "mean": -0.9255299247725595,
+    "std": 0.034746339679341515,
+    "min": -0.9994807746081921,
+    "max": -0.825,
+    "q25": -0.9422276902979522,
+    "median": -0.9131944444444444,
+    "q75": -0.9114433887354952
+  },
+  "kappa_med_stats_mass_core": {
+    "count": 500,
+    "mean": -79135.7143757697,
+    "std": 5124.951463989748,
+    "min": -89311.26592364085,
+    "max": -61779.67829569697,
+    "q25": -81942.33263079195,
+    "median": -78833.06804733835,
+    "q75": -75674.42430542965
+  },
+  "corr_G00_rho": -0.016704369651307123,
+  "PASS_G00_sign_attractive": true,
+  "PASS_kappa_median_sign": true,
+  "runtime_sec": 30.39161992073059,
+  "notes": "PP_markov_tau_geometry_v4_multiShellIntersect: STRICT PP Markov \u03c4-geometry. T00(i) from normalized trace weights (experiences only; combined experiences allowed by input). Mass core selected from traces via --mass_mask/--mass_topk/--mass_threshold/--mass_quantile. Shells S_k defined by flat\u2229curved hop-distance bands from mass_core. Mean hitting times to S_k computed by matrix-free fixed-point iteration h=1+P h with boundary h[S]=0. G00_k(i)=tau_curved_k/tau_flat_k - 1; G00_med is median over valid shells; kappa_med=G00_med/T00. No Laplacian, no Poisson, no PDE, no GR ansatz, no regression."
+}

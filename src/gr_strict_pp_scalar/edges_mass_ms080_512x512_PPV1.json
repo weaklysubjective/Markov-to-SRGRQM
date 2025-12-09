@@ -1,0 +1,42 @@
+{
+  "H": 512,
+  "N": 262144,
+  "W": 512,
+  "case": "mass_ms080",
+  "edges_out": "edges_ca_v3_mass_ms080_512x512_PPV1.txt",
+  "eps": null,
+  "indeg_max": 4,
+  "indeg_mean": 1.349456787109375,
+  "indeg_min": 0,
+  "indeg_std": 1.4805550182114158,
+  "k_out": 2,
+  "n_edges": 353752,
+  "n_sinks_outdeg0": 57931,
+  "n_sources_indeg0": 116803,
+  "neighbors": "4",
+  "notes": "STRICT PP edges-from-trace v1. Builds a directed local adjacency from trace-derived weights using an explicit rule. No PDE, no Laplacian/Poisson, no GR ansatz, no regression.",
+  "outdeg_max": 2,
+  "outdeg_mean": 1.349456787109375,
+  "outdeg_min": 0,
+  "outdeg_std": 0.8181168594048235,
+  "report_out": "src/gr_strict_pp_scalar/edges_mass_ms080_512x512_PPV1.json",
+  "rule": "uphill_topk",
+  "scc": {
+    "largest_scc_size": 1,
+    "n_scc": 262144,
+    "top5_scc_sizes": [
+      1,
+      1,
+      1,
+      1,
+      1
+    ]
+  },
+  "sink_frac_outdeg0": 0.22098922729492188,
+  "source_frac_indeg0": 0.4455680847167969,
+  "trace_weights": "trace_weights_ca_v3_mass_ms080_512x512.txt",
+  "weight_max": 1.478146972656e-05,
+  "weight_mean": 3.814697265625068e-06,
+  "weight_min": 3.814697265625e-07,
+  "weight_std": 2.3416099562827005e-06
+}
