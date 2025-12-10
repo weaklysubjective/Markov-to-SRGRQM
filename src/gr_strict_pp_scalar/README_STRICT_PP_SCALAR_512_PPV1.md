@@ -243,6 +243,22 @@ Expected outputs:
 
 ### 7.1 τ-geometry (STRICT PP, multi-shell)
 
+## Scalar EFE-00 (STRICT PP) at 512 — implemented as τ-geometry v4
+
+At 512×512, our **scalar EFE-00** validation is implemented by the
+**Markov τ-geometry** pipeline:
+
+- We compute a scalar proxy for curvature using **Markov hitting-time ratios**
+  across shells on the **curved vs flat PPV1 graphs**.
+- We combine this with **trace-derived mass (T00 proxy)** to form a
+  **scalar EFE-00 sign/consistency check**.
+- The canonical pass flags are:
+
+  - `PASS_G00_sign_attractive = true`
+  - `PASS_kappa_median_sign = true`
+
+This is the scalar EFE-00 core for the 512 runner.
+
 ```bash
 python src/gr_strict_pp_scalar/PP_markov_tau_geometry_v4_multiShellIntersect.py \
   --edges_flat    edges_ca_v3_flat_512x512_PPV1.txt \
