@@ -1,119 +1,247 @@
----
-
-## Proposed tightened README (overwrite content)
-
-````markdown
 # STRICT PP Scalar Gravity — 512×512 (PPV1)
 
 This folder contains the **STRICT PP scalar** pipeline at **512×512** for:
 - **mass_ms080**
 - **strong_pf010**
 
-All results here are **Markov + trace only**:
-- **No Laplacian field injection**
-- **No Poisson**
-- **No PDE**
-- **No Euclidean radius**
-- **No GR ansatz**
-- **No regression**
-- **Combined experiences are allowed and should be used** (STRICT PP policy)
+This is a **Markov + trace only** derivation of scalar GR observables at scale.
 
-Time and distance observables are **Markov-counter / hitting-time** and **Doyle/Steiner effective-resistance** where explicitly stated.
+## STRICT PP commitments (scalar)
+
+All results here are compliant with STRICT PP constraints:
+
+- No Laplacian field injection
+- No Poisson
+- No PDE
+- No Euclidean radius
+- No GR ansatz
+- No regression
+
+**Combined experiences are allowed and should be used** (STRICT PP policy).
+
+**Time and distance observables** are operational:
+- Markov counters / hitting times
+- Doyle/Steiner effective-resistance where explicitly stated by the script
 
 ---
 
-## 0) One-command run (recommended)
+## 0) Canonical entrypoint (one command)
 
-This is the **current canonical** 512 runner:
+Default policy:
+- Runs **τ-geometry** + **deflection**
+- Runs **Shapiro** with **ring-local auto pairs**
+- **Shapiro is not required** for `ALL_PASS` at 512 unless explicitly requested
 
 ```bash
-bash run_scalar_512_ppv1.sh
-````
+bash src/gr_strict_pp_scalar/run_scalar_512_ppv1.sh
+```
 
-It should:
+Require Shapiro in the ALL_PASS gate:
 
-1. ensure / generate trace weights for each case
-2. build curved edges (flat edges are reused)
-3. build masks (mass + orbit ring)
-4. run **τ-geometry v4 multi-shell**
-5. run **Shapiro τ v2 sparse** (case-dependent pair policy)
-6. run **deflection front v3 sparse-only** using `--src_auto ring_mid`
-7. emit per-case JSONs and a small summary
+```bash
+bash src/gr_strict_pp_scalar/run_scalar_512_ppv1.sh --require_shapiro
+```
+
+Skip Shapiro (smoke):
+
+```bash
+bash src/gr_strict_pp_scalar/run_scalar_512_ppv1.sh --skip_shapiro --cases mass_ms080
+```
+
+### Optional: stabilize Shapiro pair sensitivity via sweep
+
+If your wrapper supports the env policy:
+
+```bash
+SHAPIRO_POLICY=sweep \
+bash src/gr_strict_pp_scalar/run_scalar_512_ppv1.sh --require_shapiro
+```
+
+Optional extra sweep breadth:
+
+```bash
+SHAPIRO_POLICY=sweep \
+SHAPIRO_SWEEP_N_SEEDS=16 \
+bash src/gr_strict_pp_scalar/run_scalar_512_ppv1.sh --require_shapiro
+```
 
 ---
 
-## 1) Core artifacts (512×512)
+## 1) STRICT PP scalar 512 input chain
+
+**Scalar 512 PPV1 pipeline (canonical):**
+
+**combined experiences → case trace NPZ → trace weights → PPV1 edges →**
+**mass core (top-k) → flat-graph hop-shell ring → observables**
+(τ-geometry, deflection, Shapiro)
+
+Key ring definition:
+
+> **ring = hop-shell band around the trace-defined mass core on the flat PPV1 graph.**
+
+---
+
+## 2) Core canonical artifacts (512×512)
 
 ### Flat baseline
 
-* `edges_ca_v3_flat_512x512_PPV1.txt`
+- `edges_ca_v3_flat_512x512_PPV1.txt`
 
 ### mass_ms080
 
-* `trace_weights_ca_v3_mass_ms080_512x512.txt`
-* `edges_ca_v3_mass_ms080_512x512_PPV1.txt`
-* `PP_mass_mask_512x512_mass_ms080_PPV1.npy`
-* `PP_orbit_ring_mask_512x512_mass_ms080_PPV1.npy`
+- `trace_weights_ca_v3_mass_ms080_512x512.txt`
+- `edges_ca_v3_mass_ms080_512x512_PPV1.txt`
+- `PP_mass_mask_512x512_mass_ms080_PPV1.npy`
+- `PP_orbit_ring_mask_512x512_mass_ms080_PPV1.npy`
 
 ### strong_pf010
 
-* `trace_weights_ca_v3_strong_pf010_512x512.txt`
-* `edges_ca_v3_strong_pf010_512x512_PPV1.txt`
-* `PP_mass_mask_512x512_strong_pf010_PPV1.npy`
-* `PP_orbit_ring_mask_512x512_strong_pf010_PPV1.npy`
+- `trace_weights_ca_v3_strong_pf010_512x512.txt`
+- `edges_ca_v3_strong_pf010_512x512_PPV1.txt`
+- `PP_mass_mask_512x512_strong_pf010_PPV1.npy`
+- `PP_orbit_ring_mask_512x512_strong_pf010_PPV1.npy`
 
 ---
 
-## 2) Manual step-by-step (exact recent 512 path)
+## 3) What is the case trace NPZ?
 
-### 2.1 Generate trace weights + edges + masks
+The case trace NPZ is the **raw, combined-experience trace intensity per node**
+**before** it is exported to a `.txt` weights file.
 
-Use the 512 “min” orchestrator:
+It should contain one array of length `N = H×W` (or reshapeable to `H×W`).
+
+Recommended canonical naming:
+
+- `trace_ca_v3_mass_ms080_512x512_PPV1.npz`
+- `trace_ca_v3_strong_pf010_512x512_PPV1.npz`
+
+Inside each NPZ, store one of:
+- `trace` as shape `(N,)`, or
+- `trace_grid` as shape `(H, W)`.
+
+### If you only have the weights txt (fallback)
+
+You can wrap the existing txt weights into a compatible NPZ:
 
 ```bash
-python src/gr_strict_pp_vector/run_pf010_512_ppv1_min.py --case mass_ms080 --H 512 --W 512
-python src/gr_strict_pp_vector/run_pf010_512_ppv1_min.py --case strong_pf010 --H 512 --W 512
+python - <<'PY'
+import numpy as np
+
+def txt_to_npz(txt_path, npz_path):
+    w = np.loadtxt(txt_path).astype(np.float64)
+    if w.ndim > 1:
+        w = w[:, 0]
+    np.savez_compressed(npz_path, trace=w)
+
+txt_to_npz("trace_weights_ca_v3_mass_ms080_512x512.txt",
+           "trace_ca_v3_mass_ms080_512x512_PPV1.npz")
+
+txt_to_npz("trace_weights_ca_v3_strong_pf010_512x512.txt",
+           "trace_ca_v3_strong_pf010_512x512_PPV1.npz")
+
+print("Wrote two trace NPZ files.")
+PY
 ```
-
-Under the hood this runs:
-
-* trace GPU:
-
-  ```bash
-  python ca_trace_to_poset_v3_trace_gpu_v1.py \
-    --X 262144 --T 2000000 --eps-trace 0.1 --seed 0 --device auto \
-    --out-trace trace_weights_ca_v3_<case>_512x512.txt \
-    --report CA_POSV3_TRACE_<case>_512x512_eps010_GPU.json
-  ```
-* edges:
-
-  ```bash
-  python src/gr_strict_pp_scalar/PP_build_edges_from_trace_v1.py \
-    --trace_weights trace_weights_ca_v3_<case>_512x512.txt \
-    --case <case> --H 512 --W 512 \
-    --neighbors 4 --rule uphill_topk --k_out 2 \
-    --edges_out edges_ca_v3_<case>_512x512_PPV1.txt \
-    --report_out src/gr_strict_pp_scalar/edges_<case>_512x512_PPV1.json
-  ```
-* masks:
-
-  ```bash
-  python src/gr_strict_pp_scalar/make_pfv1_masks.py \
-    --edges edges_ca_v3_<case>_512x512_PPV1.txt \
-    --trace_weights trace_weights_ca_v3_<case>_512x512.txt \
-    --H 512 --W 512 \
-    --mass_topk 80 \
-    --auto_band --min_ring_nodes 12 \
-    --mass_out  PP_mass_mask_512x512_<case>_PPV1.npy \
-    --orbit_out PP_orbit_ring_mask_512x512_<case>_PPV1.npy \
-    --report_out src/gr_strict_pp_scalar/masks_<case>_512x512_PPV1.json
-  ```
 
 ---
 
-## 3) τ-geometry (STRICT PP)
+## 4) Trace weights extraction (NPZ → txt)
 
-This is the **production** scalar geometry check at 512:
+This is the corrected, explicit invocation:
+
+```bash
+python src/gr_strict_pp_scalar/PP_extract_trace_weights_any_v1.py \
+  --in_trace trace_ca_v3_mass_ms080_512x512_PPV1.npz \
+  --H 512 --W 512 \
+  --case mass_ms080 \
+  --out_txt trace_weights_ca_v3_mass_ms080_512x512.txt \
+  --report_out src/gr_strict_pp_scalar/trace_weights_mass_ms080_512_report.json \
+  --normalize
+```
+
+```bash
+python src/gr_strict_pp_scalar/PP_extract_trace_weights_any_v1.py \
+  --in_trace trace_ca_v3_strong_pf010_512x512_PPV1.npz \
+  --H 512 --W 512 \
+  --case strong_pf010 \
+  --out_txt trace_weights_ca_v3_strong_pf010_512x512.txt \
+  --report_out src/gr_strict_pp_scalar/trace_weights_strong_pf010_512_report.json \
+  --normalize
+```
+
+Notes:
+- `--normalize` is recommended for stable cross-run comparability.
+
+---
+
+## 5) PPV1 edges (from trace weights)
+
+Curved PPV1 edges are built from trace weights under the PPV1 rule-set:
+
+```bash
+python src/gr_strict_pp_scalar/PP_build_edges_from_trace_v1.py \
+  --trace_weights trace_weights_ca_v3_mass_ms080_512x512.txt \
+  --case mass_ms080 --H 512 --W 512 \
+  --neighbors 4 --rule uphill_topk --k_out 2 \
+  --edges_out edges_ca_v3_mass_ms080_512x512_PPV1.txt \
+  --report_out src/gr_strict_pp_scalar/edges_mass_ms080_512x512_PPV1.json
+```
+
+```bash
+python src/gr_strict_pp_scalar/PP_build_edges_from_trace_v1.py \
+  --trace_weights trace_weights_ca_v3_strong_pf010_512x512.txt \
+  --case strong_pf010 --H 512 --W 512 \
+  --neighbors 4 --rule uphill_topk --k_out 2 \
+  --edges_out edges_ca_v3_strong_pf010_512x512_PPV1.txt \
+  --report_out src/gr_strict_pp_scalar/edges_strong_pf010_512x512_PPV1.json
+```
+
+Flat baseline is reused:
+
+- `edges_ca_v3_flat_512x512_PPV1.txt`
+
+---
+
+## 6) Mass core + orbit ring masks (STRICT PP)
+
+We define the mass core as **top-k** trace-weight nodes.
+We define the orbit ring using a **graph-only hop-shell** around that core
+on the **flat PPV1** graph.
+
+Ring definition:
+
+> **ring = hop-shell band around the trace-defined mass core on the flat PPV1 graph.**
+
+Canonical commands used in the recent 512 runs:
+
+```bash
+python src/gr_strict_pp_scalar/PP_build_mass_orbit_masks_from_trace_v2.py \
+  --case mass_ms080 \
+  --H 512 --W 512 \
+  --mass_topk 500 \
+  --ring_min_hops 2 --ring_max_hops 6
+```
+
+```bash
+python src/gr_strict_pp_scalar/PP_build_mass_orbit_masks_from_trace_v2.py \
+  --case strong_pf010 \
+  --H 512 --W 512 \
+  --mass_topk 500 \
+  --ring_min_hops 2 --ring_max_hops 6
+```
+
+Expected outputs:
+
+- `PP_mass_mask_512x512_mass_ms080_PPV1.npy`
+- `PP_orbit_ring_mask_512x512_mass_ms080_PPV1.npy`
+- `PP_mass_mask_512x512_strong_pf010_PPV1.npy`
+- `PP_orbit_ring_mask_512x512_strong_pf010_PPV1.npy`
+
+---
+
+## 7) The three scalar observables (512)
+
+### 7.1 τ-geometry (STRICT PP, multi-shell)
 
 ```bash
 python src/gr_strict_pp_scalar/PP_markov_tau_geometry_v4_multiShellIntersect.py \
@@ -128,49 +256,13 @@ python src/gr_strict_pp_scalar/PP_markov_tau_geometry_v4_multiShellIntersect.py 
   --report src/gr_strict_pp_scalar/PP_markov_tau_geometry_512_<case>_topk500.json
 ```
 
-Expected **STRICT PP pass flags**:
-
-* `PASS_G00_sign_attractive = true`
-* `PASS_kappa_median_sign = true`
-
-Notes:
-
-* This is **Markov τ-geometry only**:
-  `G00_k(i)=tau_curved_k/tau_flat_k - 1`, `kappa_med=G00_med/T00`.
+Expected pass flags:
+- `PASS_G00_sign_attractive = true`
+- `PASS_kappa_median_sign = true`
 
 ---
 
-## 4) Shapiro delay (STRICT PP, sparse)
-
-Use the sparse implementation at 512:
-
-```bash
-python src/gr_strict_pp_scalar/PP_Shapiro_markov_tau_v2_sparse.py \
-  --edges_flat   edges_ca_v3_flat_512x512_PPV1.txt \
-  --edges_curved edges_ca_v3_<case>_512x512_PPV1.txt \
-  --H 512 --W 512 \
-  --src_through <auto_or_manual> --dst_through <auto_or_manual> \
-  --src_around  <auto_or_manual> --dst_around  <auto_or_manual> \
-  --tol 1e-5 --maxiter 200000 \
-  --output src/gr_strict_pp_scalar/PP_Shapiro_markov_tau_512_<case>_PPV1.json
-```
-
-**Important recent lesson**:
-
-* Shapiro PASS is **pair-sensitive** at 512.
-* Some ring-derived around pairs can fail even when the scalar τ-geometry is healthy.
-* The runner should treat Shapiro as:
-
-  * **Required** for strong_pf010 if the auto-pair policy is stable,
-  * **Advisory/soft** for ms080 until we lock a robust pair-selection rule.
-
-(We can harden this in the runner by sampling ring pairs and selecting a “flat-R-through matched” around pair.)
-
----
-
-## 5) Deflection (STRICT PP, sparse-only — canonical)
-
-This is now the **correct** 512 deflection script:
+### 7.2 Deflection (STRICT PP, sparse-only — canonical)
 
 ```bash
 python src/gr_strict_pp_scalar/PP_deflection_markov_front_PP_v3_sparse_only.py \
@@ -186,109 +278,113 @@ python src/gr_strict_pp_scalar/PP_deflection_markov_front_PP_v3_sparse_only.py \
 ```
 
 This version:
-
-* **Deletes dense loaders**
-* Uses sparse `P`
-* Evolves row-distributions via **`P^T @ v`**
-* Adds `--src_auto ring_mid` using the orbit ring
-* Has a tighter PASS/INDETERMINATE policy
-
-Your latest runs show:
-
-* `PASS_deflection_markov_front_PP = True` for **mass_ms080**
-* `PASS_deflection_markov_front_PP = True` for **strong_pf010**
+- Uses sparse Markov kernels only (no dense NxN)
+- Evolves row-distributions via `P^T @ v`
+- Auto-selects source via the ring
+- Has a tighter PASS/INDETERMINATE policy
 
 ---
 
-## 6) Current PASS policy at 512 (PPV1)
+### 7.3 Shapiro delay (STRICT PP, sparse)
 
-We consider the **scalar 512 strict-PP story** healthy when:
+Manual invocation:
+
+```bash
+python src/gr_strict_pp_scalar/PP_Shapiro_markov_tau_v2_sparse.py \
+  --edges_flat   edges_ca_v3_flat_512x512_PPV1.txt \
+  --edges_curved edges_ca_v3_<case>_512x512_PPV1.txt \
+  --H 512 --W 512 \
+  --src_through <int> --dst_through <int> \
+  --src_around  <int> --dst_around  <int> \
+  --tol 1e-5 --maxiter 200000 \
+  --output src/gr_strict_pp_scalar/PP_Shapiro_markov_tau_512_<case>_PPV1.json
+```
+
+At 512:
+- Shapiro can be **pair-sensitive**.
+- The runner supports:
+  - ring-local auto pairs by default
+  - optional sweep stabilization via `SHAPIRO_POLICY=sweep`
+
+---
+
+## 8) 512 runner (ms080 + strong_pf010)
+
+The canonical scalar 512 orchestrator:
+
+```bash
+python src/gr_strict_pp_scalar/PP_scalar_512_runner_v1.py \
+  --H 512 --W 512 \
+  --cases mass_ms080,strong_pf010 \
+  --steps 800 \
+  --mass_topk 500 \
+  --shell_bands 2:3,3:4,4:5,5:6 \
+  --ht_tol 1e-5 --ht_maxiter 40000 \
+  --defl_ht_tol 1e-5 --defl_ht_maxiter 20000 \
+  --src_auto ring_mid \
+  --shapiro_tol 1e-5 --shapiro_maxiter 200000 \
+  --output src/gr_strict_pp_scalar/PP_scalar_512_suite_report.json
+```
+
+Require Shapiro:
+
+```bash
+python src/gr_strict_pp_scalar/PP_scalar_512_runner_v1.py \
+  --H 512 --W 512 \
+  --cases mass_ms080,strong_pf010 \
+  --require_shapiro \
+  --output src/gr_strict_pp_scalar/PP_scalar_512_suite_report_REQUIRE_SHAPIRO.json
+```
+
+---
+
+## 9) PASS policy (scalar 512 PPV1)
+
+We consider the scalar 512 strict PP story healthy when:
 
 ### Required
+1) **τ-geometry v4**:
+   - attractive `G00` sign
+   - consistent `kappa` sign
 
-1. **τ-geometry v4**:
+2) **Deflection v3 sparse-only**
 
-   * `PASS_G00_sign_attractive = true`
-   * `PASS_kappa_median_sign = true`
-
-2. **Deflection v3 sparse-only**:
-
-   * `PASS_deflection_markov_front_PP = true`
-
-### Advisory / case-dependent
-
-3. **Shapiro v2 sparse**:
-
-   * PASS if pair-selection stable
-   * otherwise flagged for pair-policy hardening
+### Optional / hardening target
+3) **Shapiro v2 sparse**
+   - required only when `--require_shapiro` is set
+   - recommended to use sweep policy at 512 for stability
 
 ---
 
-## 7) Suggested git freeze set (512)
-
-```bash
-git add \
-  trace_weights_ca_v3_mass_ms080_512x512.txt \
-  trace_weights_ca_v3_strong_pf010_512x512.txt \
-  edges_ca_v3_mass_ms080_512x512_PPV1.txt \
-  edges_ca_v3_strong_pf010_512x512_PPV1.txt \
-  src/gr_strict_pp_scalar/edges_mass_ms080_512x512_PPV1.json \
-  src/gr_strict_pp_scalar/edges_strong_pf010_512x512_PPV1.json \
-  PP_mass_mask_512x512_mass_ms080_PPV1.npy \
-  PP_orbit_ring_mask_512x512_mass_ms080_PPV1.npy \
-  PP_mass_mask_512x512_strong_pf010_PPV1.npy \
-  PP_orbit_ring_mask_512x512_strong_pf010_PPV1.npy \
-  src/gr_strict_pp_scalar/masks_mass_ms080_512x512_PPV1.json \
-  src/gr_strict_pp_scalar/masks_strong_pf010_512x512_PPV1.json \
-  src/gr_strict_pp_scalar/PP_markov_tau_geometry_512_mass_ms080_topk500.json \
-  src/gr_strict_pp_scalar/PP_markov_tau_geometry_512_strong_pf010_topk500.json \
-  src/gr_strict_pp_scalar/PP_deflection_front_512_mass_ms080_PPV1.json \
-  src/gr_strict_pp_scalar/PP_deflection_front_512_strong_pf010_PPV1.json \
-  src/gr_strict_pp_scalar/PP_Shapiro_markov_tau_512_mass_ms080_PPV1.json \
-  src/gr_strict_pp_scalar/PP_Shapiro_markov_tau_512_strong_pf010_PPV1.json \
-  src/gr_strict_pp_scalar/PP_deflection_markov_front_PP_v3_sparse_only.py \
-  run_scalar_512_ppv1.sh \
-  src/gr_strict_pp_scalar/README_STRICT_PP_SCALAR_512_PPV1.md
-```
-
-Then:
-
-```bash
-git commit -m "STRICT PP scalar 512 PPV1: ms080+pf010 tau-geometry, deflection v3 sparse, Shapiro sparse"
-```
-
----
-
-## 8) Next hardening item
-
-**Shapiro 512 pair-policy**:
-
-* Add an internal ring-pair sampler:
-
-  * match `R_through_flat` within tolerance
-  * choose around pair with similar flat resistance
-  * then require curved Δτ to exceed flat Δτ
-
-This will remove the current “PASS depends on which ring pair you pick” issue.
-
----
-
-## 9) Summary
+## 10) Summary
 
 At 512×512 PPV1 we now have:
 
-* **STRICT PP τ-geometry sign-consistent** (ms080 + strong_pf010)
-* **STRICT PP deflection PASS** using **v3 sparse-only** with `ring_mid`
-* **STRICT PP Shapiro** working with sparse solver but still needs a robust
-  **pair-selection policy** at scale
+- **STRICT PP τ-geometry sign-consistent** (mass_ms080 + strong_pf010)
+- **STRICT PP deflection PASS** using **v3 sparse-only** + `ring_mid`
+- **STRICT PP Shapiro** supported with:
+  - ring-local auto pairs
+  - optional sweep stabilization at scale
 
-The canonical “today” entrypoint is:
+Primary entrypoint:
 
 ```bash
-bash run_scalar_512_ppv1.sh
+bash src/gr_strict_pp_scalar/run_scalar_512_ppv1.sh
 ```
 
+Optional stability enhancement:
+
+```bash
+SHAPIRO_POLICY=sweep \
+bash src/gr_strict_pp_scalar/run_scalar_512_ppv1.sh --require_shapiro
 ```
 
 ---
+
+## Scope note
+
+This README documents the **scalar** STRICT PP 512 PPV1 pipeline only.
+
+The **vector** pipeline should be documented in a separate README
+to keep inputs, observables, and PASS criteria unambiguous.
 

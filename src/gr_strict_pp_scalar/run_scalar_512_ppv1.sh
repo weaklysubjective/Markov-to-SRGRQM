@@ -2,8 +2,16 @@
 # run_scalar_512_ppv1.sh
 #
 # STRICT PP Scalar 512 one-command runner wrapper.
-# Calls:
-#   src/gr_strict_pp_scalar/PP_scalar_512_runner_v1.py
+#
+# Default behavior (UNCHANGED):
+#   Calls:
+#     src/gr_strict_pp_scalar/PP_scalar_512_runner_v1.py
+#
+# Optional behavior via ENV:
+#   If SHAPIRO_POLICY is set (e.g., "sweep"), we will prefer:
+#     src/gr_strict_pp_scalar/PP_scalar_512_runner_v2.py
+#   and pass:
+#     --shapiro_policy <value>
 #
 # Defaults:
 #   cases = mass_ms080,strong_pf010
@@ -26,6 +34,22 @@
 set -euo pipefail
 
 PY_BIN="${PY_BIN:-python}"
+
+# Optional ENV to switch runner:
+#   SHAPIRO_POLICY=sweep|auto|manual|skip
+SHAPIRO_POLICY="${SHAPIRO_POLICY:-}"
+
+# Sweep knobs (only used if v2 + sweep)
+SHAPIRO_SWEEP_N_SEEDS="${SHAPIRO_SWEEP_N_SEEDS:-16}"
+SHAPIRO_SWEEP_AROUND_DELTA="${SHAPIRO_SWEEP_AROUND_DELTA:-10}"
+SHAPIRO_SWEEP_THROUGH_DELTA="${SHAPIRO_SWEEP_THROUGH_DELTA:-10}"
+SHAPIRO_SWEEP_PREFER_PASS="${SHAPIRO_SWEEP_PREFER_PASS:-0}"
+
+# Manual pair ENV (only used if v2 + manual)
+SHAPIRO_SRC_THROUGH="${SHAPIRO_SRC_THROUGH:-}"
+SHAPIRO_DST_THROUGH="${SHAPIRO_DST_THROUGH:-}"
+SHAPIRO_SRC_AROUND="${SHAPIRO_SRC_AROUND:-}"
+SHAPIRO_DST_AROUND="${SHAPIRO_DST_AROUND:-}"
 
 H=512
 W=512
@@ -61,6 +85,20 @@ usage() {
   echo ""
   echo "Env:"
   echo "  PY_BIN=<python>            default 'python'"
+  echo "  SHAPIRO_POLICY=sweep|auto|manual|skip"
+  echo "    If set, wrapper will prefer runner v2 and pass --shapiro_policy."
+  echo ""
+  echo "  Sweep-only env:"
+  echo "    SHAPIRO_SWEEP_N_SEEDS=<int>          default 16"
+  echo "    SHAPIRO_SWEEP_AROUND_DELTA=<int>    default 10"
+  echo "    SHAPIRO_SWEEP_THROUGH_DELTA=<int>   default 10"
+  echo "    SHAPIRO_SWEEP_PREFER_PASS=1         optional"
+  echo ""
+  echo "  Manual-only env (requires all 4):"
+  echo "    SHAPIRO_SRC_THROUGH=<int>"
+  echo "    SHAPIRO_DST_THROUGH=<int>"
+  echo "    SHAPIRO_SRC_AROUND=<int>"
+  echo "    SHAPIRO_DST_AROUND=<int>"
 }
 
 # Simple arg parse
@@ -75,7 +113,7 @@ while [[ $# -gt 0 ]]; do
     --skip_shapiro) SKIP_SHAPIRO=1; shift 1;;
     --output) OUTPUT="$2"; shift 2;;
 
-    # advanced passthrough knobs if you want them later
+    # advanced passthrough knobs
     --ht_tol) HT_TOL="$2"; shift 2;;
     --ht_maxiter) HT_MAXITER="$2"; shift 2;;
     --defl_ht_tol) DEFL_HT_TOL="$2"; shift 2;;
@@ -95,8 +133,25 @@ if [[ "$REQUIRE_SHAPIRO" -eq 1 && "$SKIP_SHAPIRO" -eq 1 ]]; then
   exit 1
 fi
 
+RUNNER_V1="src/gr_strict_pp_scalar/PP_scalar_512_runner_v1.py"
+RUNNER_V2="src/gr_strict_pp_scalar/PP_scalar_512_runner_v2.py"
+
+RUNNER="$RUNNER_V1"
+RUNNER_MODE="v1_default"
+
+# If SHAPIRO_POLICY is set, prefer v2 if present
+if [[ -n "$SHAPIRO_POLICY" ]]; then
+  if [[ -f "$RUNNER_V2" ]]; then
+    RUNNER="$RUNNER_V2"
+    RUNNER_MODE="v2_env_shapiro_policy"
+  else
+    echo "[WARN] SHAPIRO_POLICY set but v2 runner not found: $RUNNER_V2"
+    echo "[WARN] Falling back to v1."
+  fi
+fi
+
 CMD=(
-  "$PY_BIN" "src/gr_strict_pp_scalar/PP_scalar_512_runner_v1.py"
+  "$PY_BIN" "$RUNNER"
   "--H" "$H" "--W" "$W"
   "--cases" "$CASES"
   "--steps" "$STEPS"
@@ -119,6 +174,35 @@ if [[ "$SKIP_SHAPIRO" -eq 1 ]]; then
   CMD+=("--skip_shapiro")
 fi
 
+# v2-only shapiro policy extras
+if [[ "$RUNNER" == "$RUNNER_V2" ]]; then
+  CMD+=("--shapiro_policy" "$SHAPIRO_POLICY")
+
+  if [[ "$SHAPIRO_POLICY" == "sweep" ]]; then
+    CMD+=(
+      "--shapiro_sweep_n_seeds" "$SHAPIRO_SWEEP_N_SEEDS"
+      "--shapiro_sweep_around_delta" "$SHAPIRO_SWEEP_AROUND_DELTA"
+      "--shapiro_sweep_through_delta" "$SHAPIRO_SWEEP_THROUGH_DELTA"
+    )
+    if [[ "$SHAPIRO_SWEEP_PREFER_PASS" == "1" ]]; then
+      CMD+=("--shapiro_sweep_prefer_pass")
+    fi
+  elif [[ "$SHAPIRO_POLICY" == "manual" ]]; then
+    if [[ -z "$SHAPIRO_SRC_THROUGH" || -z "$SHAPIRO_DST_THROUGH" || -z "$SHAPIRO_SRC_AROUND" || -z "$SHAPIRO_DST_AROUND" ]]; then
+      echo "[ERROR] SHAPIRO_POLICY=manual requires all 4 env vars:"
+      echo "  SHAPIRO_SRC_THROUGH, SHAPIRO_DST_THROUGH, SHAPIRO_SRC_AROUND, SHAPIRO_DST_AROUND"
+      exit 1
+    fi
+    CMD+=(
+      "--shapiro_src_through" "$SHAPIRO_SRC_THROUGH"
+      "--shapiro_dst_through" "$SHAPIRO_DST_THROUGH"
+      "--shapiro_src_around"  "$SHAPIRO_SRC_AROUND"
+      "--shapiro_dst_around"  "$SHAPIRO_DST_AROUND"
+    )
+  fi
+fi
+
+echo "[MODE] $RUNNER_MODE"
 echo "[RUN] ${CMD[*]}"
 "${CMD[@]}"
 
@@ -153,5 +237,5 @@ print("")
 print("report =", path)
 PY
 
-echo "[OK] Done."
+echo "[OK]"
 
