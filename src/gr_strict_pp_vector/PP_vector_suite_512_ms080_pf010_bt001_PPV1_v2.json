@@ -1,0 +1,19 @@
+{
+  "ALL_PASS_vector_strict_PP_v2": true,
+  "n_packs": 2,
+  "notes": "STRICT PP vector suite v2. Aggregates vector packs. Accepts pack-level overall keys v1 or v2 (v2 may be 512-aware). No new physics is introduced here.",
+  "packs": [
+    {
+      "case": "ms080",
+      "overall_PASS_vector_strict_PP_v2": true,
+      "overall_key_used": "overall_PASS_vector_strict_PP_v2",
+      "pack": "src/gr_strict_pp_vector/PP_vector_pack_512_ms080_bt001_PPV1.json"
+    },
+    {
+      "case": "strong_pf010",
+      "overall_PASS_vector_strict_PP_v2": true,
+      "overall_key_used": "overall_PASS_vector_strict_PP_v2",
+      "pack": "src/gr_strict_pp_vector/PP_vector_pack_512_strong_pf010_bt001_PPV1.json"
+    }
+  ]
+}
