@@ -1,0 +1,26 @@
+{
+  "H": 512,
+  "W": 512,
+  "mass_case": "ms080",
+  "mass_shapiro_PASS_flags": {
+    "PASS_Shapiro_markov_tau": true
+  },
+  "mass_shapiro_json": "src/gr_strict_pp_scalar/PP_Shapiro_markov_tau_512_mass_ms080_PPV1.json",
+  "mass_tau_PASS_flags": {
+    "PASS_G00_sign_attractive": true,
+    "PASS_kappa_median_sign": true
+  },
+  "mass_tau_json": "src/gr_strict_pp_scalar/PP_markov_tau_geometry_512_mass_ms080_topk500.json",
+  "notes": "STRICT PP scalar EFE-00 status at 512x512 PPV1. This is a *summary* over existing \u03c4-geometry and Shapiro reports. It introduces no new observables and performs no PDE, no Laplacian/Poisson solve, and no regression. Deflection-front tests are intentionally excluded here; see the deflection JSON for their NA/fail status.",
+  "overall_PASS_scalar_EFE00_strict_PP_v1": true,
+  "strong_case": "strong_pf010",
+  "strong_shapiro_PASS_flags": {
+    "PASS_Shapiro_markov_tau": true
+  },
+  "strong_shapiro_json": "src/gr_strict_pp_scalar/PP_Shapiro_markov_tau_512_strong_pf010_PPV1.json",
+  "strong_tau_PASS_flags": {
+    "PASS_G00_sign_attractive": true,
+    "PASS_kappa_median_sign": true
+  },
+  "strong_tau_json": "src/gr_strict_pp_scalar/PP_markov_tau_geometry_512_strong_pf010_topk500.json"
+}
