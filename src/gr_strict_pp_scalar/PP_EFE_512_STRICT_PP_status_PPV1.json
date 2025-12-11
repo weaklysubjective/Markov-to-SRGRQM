@@ -1,0 +1,15 @@
+{
+  "H": 512,
+  "W": 512,
+  "deflection_json": "src/gr_strict_pp_scalar/PP_deflection_markov_front_512_strong_pf010_v5_PPV1.json",
+  "deflection_status": {
+    "APPLICABLE": false,
+    "PASS_key_present": true
+  },
+  "notes": "STRICT PP EFE status at 512x512 PPV1. Scalar side uses \u03c4-geometry (G00 sign + \u03ba sign) and sparse Shapiro; vector side uses azimuthal bias / feeder-shear / frame-dragging proxies with admissibility gates. Both scalar and vector suites PASS at this scale. Deflection-front test at 512x512 PPV1 is NOT APPLICABLE for strong_pf010: no Markov hop-distance band (d>0) with sufficient nodes and nonzero flat/curved front mass.",
+  "overall_PASS_STRICT_PP_EFE_512_PPV1": true,
+  "scalar_PASS": true,
+  "scalar_status_json": "src/gr_strict_pp_scalar/PP_scalar_512_EFE_status_PPV1.json",
+  "vector_PASS": true,
+  "vector_suite_json": "src/gr_strict_pp_vector/PP_vector_suite_512_ms080_pf010_bt001_PPV1_v2.json"
+}
