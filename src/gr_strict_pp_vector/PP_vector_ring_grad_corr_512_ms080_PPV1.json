@@ -1,0 +1,20 @@
+{
+  "H": 512,
+  "N": 262144,
+  "PASS_vector_ring_grad_corr_PP": true,
+  "VECTOR_RING_GRAD_CORR_APPLICABLE": true,
+  "W": 512,
+  "bias_grad": 0.01694915254237288,
+  "bias_threshold": 0.01,
+  "ccw_decrease": 609,
+  "cw_decrease": 630,
+  "edges_curved": "edges_ca_v3_mass_ms080_512x512_PPV1.txt",
+  "edges_in_ring_total": 1291,
+  "edges_used_inward": 1239,
+  "mass_mask": "PP_mass_mask_512x512_mass_ms080_PPV1.npy",
+  "min_edges_used": 50,
+  "n_ring_nodes": 2937,
+  "notes": "STRICT PP vector ring gradient correlation v1. Ring is defined by orbit_mask & ~mass_mask. Scalar structure is Markov hop distance TO mass from a reverse-BFS. We count only edges on the ring whose endpoint distance decreases (toward mass) and ask whether they preferentially move in one azimuthal direction (cw vs ccw) in the ring ordering. Grid coordinates are used as labels only to define an ordering; no PDE, no Laplacian/Poisson, no GR ansatz, no regression.",
+  "orbit_mask": "PP_orbit_ring_mask_512x512_mass_ms080_PPV1.npy",
+  "other_count": 52
+}
