@@ -1,0 +1,49 @@
+{
+  "H": 512,
+  "N": 262144,
+  "W": 512,
+  "deflection_stats": {
+    "APPLICABLE": true,
+    "D_curved": 5.519605201587119e-05,
+    "D_flat": 0.003607235542877732,
+    "F_ring_curved": 0.02826037863212605,
+    "F_ring_flat": 1.8469045979533987,
+    "PASS_deflection_markov_front_PP_v7": true,
+    "delta_threshold": 0.05,
+    "min_ring_visit_flat": 1e-09,
+    "peak_ring_mass_curved": 0.0003522553597576916,
+    "peak_ring_mass_flat": 0.0271502323448658,
+    "reason": null,
+    "reduction_fraction": 0.984698517366061
+  },
+  "device_used": "cuda",
+  "edges_curved": "edges_ca_v3_mass_ms080_512x512_PPV1_E2.txt",
+  "edges_flat": "edges_ca_v3_flat_512x512_PPV1_E2.txt",
+  "evolution": {
+    "burn_in": 256,
+    "steps_arg_ignored_for_v7": 512,
+    "window": 512
+  },
+  "mass_mask": "PP_mass_mask_512x512_mass_ms080_PPV1.npy",
+  "notes": "STRICT PP deflection v7. Uses cumulative ring visitation on a fixed quantile-band ring defined from flat directed hop distance to mass (within orbit universe). This makes deflection applicable even when curved rapidly collapses inward (ring mass ~ 0), which is interpreted as strong focusing rather than NA. No PDE/Poisson/GR ansatz/regression.",
+  "orbit_mask": "PP_orbit_ring_mask_512x512_mass_ms080_PPV1.npy",
+  "ring_selection": {
+    "PASS_ring_nodes_ge_min": true,
+    "d_hi": 18,
+    "d_lo": 11,
+    "finite_in_universe": 28967,
+    "min_ring_nodes": 100,
+    "mode": "quantile_band_from_flat_dist_within_orbit",
+    "ok": true,
+    "orbit_universe_nodes": 28967,
+    "q_hi": 0.8,
+    "q_lo": 0.6,
+    "ring_nodes": 6012
+  },
+  "sources": {
+    "n_sources": 256,
+    "policy": "maxdist_flat_band",
+    "source_band_width": 64
+  },
+  "torch_used": true
+}
