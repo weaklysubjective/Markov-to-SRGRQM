@@ -1,0 +1,60 @@
+{
+  "H": 512,
+  "N": 262144,
+  "W": 512,
+  "dist_to_mass": {
+    "curved": {
+      "finite_frac": 1.0,
+      "max_finite_dist": 61,
+      "min_finite_dist": 0
+    },
+    "flat": {
+      "finite_frac": 1.0,
+      "max_finite_dist": 269,
+      "min_finite_dist": 0
+    }
+  },
+  "edges_curved": "edges_ca_v3_strong_pf010_512x512_PPV1_E2.txt",
+  "edges_flat": "edges_ca_v3_flat_512x512_PPV1_E2.txt",
+  "mass_mask": "PP_mass_mask_512x512_strong_pf010_PPV1.npy",
+  "n_edges_curved": 1047072,
+  "n_edges_flat": 1048572,
+  "notes": "STRICT PP diagnostics v1. Distances are directed Markov hop distances to mass (reverse BFS). Sources are selected from max-distance band on FLAT only (fixed rule). Reachability is forward reach from those sources. Ring selection is a fixed quantile band of flat dist within the orbit universe. No PDE/Poisson/GR ansatz/regression.",
+  "orbit_mask": "PP_orbit_ring_mask_512x512_strong_pf010_PPV1.npy",
+  "reachability_from_sources": {
+    "curved": {
+      "mass_nodes": 500,
+      "mass_reachable": 500,
+      "orbit_nodes": 28967,
+      "orbit_reachable": 28029,
+      "reach_frac": 0.9710006713867188
+    },
+    "flat": {
+      "mass_nodes": 500,
+      "mass_reachable": 279,
+      "orbit_nodes": 28967,
+      "orbit_reachable": 16090,
+      "reach_frac": 0.5029258728027344
+    }
+  },
+  "ring_selection": {
+    "PASS_ring_nodes_ge_min": true,
+    "d_hi": 18,
+    "d_lo": 11,
+    "finite_in_universe": 28967,
+    "min_ring_nodes": 100,
+    "mode": "quantile_band_from_flat_dist_within_orbit",
+    "ok": true,
+    "orbit_universe_nodes": 28967,
+    "q_hi": 0.8,
+    "q_lo": 0.6,
+    "ring_nodes": 6012
+  },
+  "sources": {
+    "n_sources": 256,
+    "policy": "maxdist_flat_band",
+    "source_band_width": 64,
+    "sources_max_idx": 936,
+    "sources_min_idx": 297
+  }
+}
