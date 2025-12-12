@@ -1,0 +1,34 @@
+{
+  "H": 512,
+  "W": 512,
+  "cases": [
+    {
+      "APPLICABLE": true,
+      "D_curved": 5.519605201587119e-05,
+      "D_flat": 0.003607235542877732,
+      "PASS": true,
+      "PASS_key_used": "PASS_deflection_markov_front_PP_v7",
+      "case": "ms080",
+      "path": "src/gr_strict_pp_scalar/PP_deflection_markov_front_512_ms080_v7_PPV1_E2_late.json",
+      "reason": null,
+      "reduction_fraction": 0.984698517366061
+    },
+    {
+      "APPLICABLE": true,
+      "D_curved": 5.5196039475458036e-05,
+      "D_flat": 0.0036072355894990484,
+      "PASS": true,
+      "PASS_key_used": "PASS_deflection_markov_front_PP_v7",
+      "case": "strong_pf010",
+      "path": "src/gr_strict_pp_scalar/PP_deflection_markov_front_512_strong_pf010_v7_PPV1_E2_late.json",
+      "reason": null,
+      "reduction_fraction": 0.9846985210402841
+    }
+  ],
+  "inputs": {
+    "ms080_json": "src/gr_strict_pp_scalar/PP_deflection_markov_front_512_ms080_v7_PPV1_E2_late.json",
+    "strong_pf010_json": "src/gr_strict_pp_scalar/PP_deflection_markov_front_512_strong_pf010_v7_PPV1_E2_late.json"
+  },
+  "notes": "STRICT PP deflection E2 status (512\u00d7512). Aggregates v7 late-window deflection-front artifacts for ms080 and strong_pf010. No new observables, no PDE/Poisson, no GR ansatz, no regression.",
+  "overall_PASS_deflection_E2_strict_PP_v1": true
+}
