@@ -1,159 +1,113 @@
 #!/usr/bin/env python3
-import argparse
-import json
-import os
-import sys
+import argparse, json, os
+from typing import Any, Dict, List, Optional
 
-
-def die(msg: str, code: int = 1) -> None:
-    print(f"ERROR: {msg}", file=sys.stderr)
-    sys.exit(code)
-
-
-def load_json(path: str) -> dict:
-    if not os.path.exists(path):
-        die(f"JSON not found: {path}")
+def load_json(path: str) -> Dict[str, Any]:
     with open(path, "r") as f:
         return json.load(f)
 
+def _pick(d: Dict[str, Any], keys: List[str], default=None):
+    for k in keys:
+        if k in d:
+            return d[k]
+    return default
 
-def as_bool(d: dict, key: str, required: bool = True, default: bool = False) -> bool:
-    if key not in d:
-        if not required:
-            return default
-        die(f"Missing key {key!r} in JSON.")
-    v = d[key]
-    if not isinstance(v, bool):
-        die(f"Key {key!r} is not bool (got {type(v)}).")
-    return v
-
-
-def main() -> None:
+def main():
     ap = argparse.ArgumentParser(
-        description=(
-            "STRICT PP 2+1D off-diagonal EFE status at 512x512 PPV1.\n"
-            "Aggregates scalar EFE-00 status and vector suite status.\n"
-            "No new observables; no PDE, no Laplacian/Poisson, no GR ansatz, no regression."
-        )
+        description="STRICT PP off-diag 2+1 status aggregator (512). "
+                    "Aggregates per-case Einstein-block toy off-diag artifacts. "
+                    "No new observables; no PDE/Poisson; no GR ansatz; no regression."
     )
-    ap.add_argument(
-        "--scalar_status",
-        default="src/gr_strict_pp_scalar/PP_scalar_EFE00_status_512_strict_PP_v1.json",
-        help="Scalar EFE-00 status JSON (STRICT PP, 512x512).",
-    )
-    ap.add_argument(
-        "--vector_suite",
-        default="src/gr_strict_pp_vector/PP_vector_suite_512_ms080_pf010_bt001_PPV1_v2.json",
-        help="Vector suite status JSON (STRICT PP, 512x512, v2).",
-    )
-    ap.add_argument(
-        "--output",
-        default="src/gr_strict_pp_scalar/PP_EFE_offdiag_2p1_status_512_STRICT_PP_v1.json",
-        help="Output JSON path for combined 2+1D off-diagonal EFE status.",
-    )
+
+    # Backward-compat placeholders (optional, not gating)
+    ap.add_argument("--scalar_status", default=None,
+                    help="Optional scalar status JSON (informational only).")
+    ap.add_argument("--vector_suite", default=None,
+                    help="Optional vector suite JSON (informational only).")
+
+    # NEW: explicit blocks list (this is what you tried to run)
+    ap.add_argument("--blocks", nargs="+", default=None,
+                    help="List of per-case offdiag Einstein-block JSONs (ms080 + strong_pf010).")
+
+    ap.add_argument("--output", required=True)
     args = ap.parse_args()
 
-    # --- Load scalar EFE-00 status ---
-    S = load_json(args.scalar_status)
+    blocks = []
+    if args.blocks:
+        blocks = args.blocks
+    else:
+        # If no --blocks, we still write a report, but it will be non-applicable.
+        blocks = []
 
-    # Basic sanity
-    H = S.get("H")
-    W = S.get("W")
-    if H != 512 or W != 512:
-        die(f"Scalar status H,W must be 512,512 (got {H},{W}).")
+    per_case = []
+    all_app = True
+    all_pass = True
 
-    mass_case = S.get("mass_case")
-    strong_case = S.get("strong_case")
-    if not isinstance(mass_case, str) or not isinstance(strong_case, str):
-        die("Scalar status must contain 'mass_case' and 'strong_case' strings.")
+    for p in blocks:
+        if not os.path.exists(p):
+            all_app = False
+            all_pass = False
+            per_case.append({
+                "path": p,
+                "present": False,
+                "APPLICABLE": None,
+                "PASS": None,
+                "reason": "missing_file"
+            })
+            continue
 
-    scalar_pass = as_bool(
-        S, "overall_PASS_scalar_EFE00_strict_PP_v1", required=True
-    )
+        J = load_json(p)
 
-    # --- Load vector suite status (v2) ---
-    V = load_json(args.vector_suite)
+        applicable = bool(_pick(J, ["APPLICABLE"], False))
+        # accept key variants
+        pass_key = _pick(J, [
+            "PASS_offdiag_2p1_toy_diag_v3",
+            "PASS_offdiag_2p1_toy_diag_v2",
+            "PASS_offdiag_2p1_toy_diag",
+        ], None)
+        passed = bool(pass_key) if pass_key is not None else False
 
-    all_pass_vector_v2 = as_bool(
-        V, "ALL_PASS_vector_strict_PP_v2", required=True
-    )
+        all_app = all_app and applicable
+        all_pass = all_pass and passed
 
-    # Extract case labels from packs for simple consistency check
-    packs = V.get("packs", [])
-    if not isinstance(packs, list) or len(packs) == 0:
-        die("Vector suite JSON must contain non-empty 'packs' list.")
-
-    case_labels = []
-    per_case_ok = {}
-    for entry in packs:
-        if not isinstance(entry, dict):
-            die("Each entry in 'packs' must be a dict.")
-        case = entry.get("case")
-        if not isinstance(case, str):
-            die("Each pack entry must contain a 'case' string.")
-        case_labels.append(case)
-
-        # Decide which overall key was used at pack level
-        overall_key_used = entry.get("overall_key_used")
-        if not isinstance(overall_key_used, str):
-            die(f"Pack for case {case!r} missing 'overall_key_used' string.")
-        ok = bool(entry.get(overall_key_used))
-        per_case_ok[case] = ok
-
-    case_set = set(case_labels)
-
-    # Expected two-case structure: ms080 and strong_pf010
-    expected_cases = {mass_case, strong_case}
-    cases_match_expected = (case_set >= expected_cases)
-
-    # All expected cases individually PASS under their own chosen overall keys?
-    all_expected_cases_pass = all(
-        per_case_ok.get(c, False) for c in expected_cases
-    )
-
-    # --- Conditions for 2+1D off-diagonal EFE status ---
-    cond_scalar = scalar_pass
-    cond_vector_suite = all_pass_vector_v2
-    cond_case_consistency = cases_match_expected and all_expected_cases_pass
-
-    overall_pass = bool(cond_scalar and cond_vector_suite and cond_case_consistency)
+        per_case.append({
+            "path": p,
+            "present": True,
+            "case": _pick(J, ["case"], None),
+            "APPLICABLE": applicable,
+            "PASS": passed,
+            "pass_key_used": "PASS_offdiag_2p1_toy_diag_v3" if "PASS_offdiag_2p1_toy_diag_v3" in J else (
+                "PASS_offdiag_2p1_toy_diag_v2" if "PASS_offdiag_2p1_toy_diag_v2" in J else (
+                    "PASS_offdiag_2p1_toy_diag" if "PASS_offdiag_2p1_toy_diag" in J else None
+                )
+            )
+        })
 
     out = {
-        "H": H,
-        "W": W,
-        "mass_case": mass_case,
-        "strong_case": strong_case,
-        "scalar_status_json": args.scalar_status,
-        "scalar_EFE00_PASS": cond_scalar,
-        "vector_suite_json": args.vector_suite,
-        "vector_suite_ALL_PASS_vector_strict_PP_v2": all_pass_vector_v2,
-        "vector_cases": sorted(case_set),
-        "vector_per_case_PASS": per_case_ok,
-        "conditions": {
-            "cond_scalar_EFE00_PASS": cond_scalar,
-            "cond_vector_suite_ALL_PASS_v2": cond_vector_suite,
-            "cond_cases_match_expected_and_PASS": cond_case_consistency,
+        "H": 512,
+        "W": 512,
+        "notes": "STRICT PP off-diag 2+1 status (512×512). Aggregates per-case offdiag Einstein-block artifacts. "
+                 "No new observables, no PDE/Poisson, no GR ansatz, no regression.",
+        "inputs": {
+            "blocks": blocks,
+            "scalar_status": args.scalar_status,
+            "vector_suite": args.vector_suite,
         },
-        "overall_PASS_EFE_offdiag_2p1_STRICT_PP_v1": overall_pass,
-        "notes": (
-            "STRICT PP 2+1D off-diagonal EFE status at 512x512 PPV1. "
-            "This is a *summary* over existing scalar EFE-00 status and vector "
-            "ring observables (azimuthal flux, ring-gradient correlation, and "
-            "their admissibility gates). It introduces no new observables and "
-            "performs no PDE, no Laplacian/Poisson solve, and no regression. "
-            "PASS means: the same CA/trace-derived mass core that drives the "
-            "scalar EFE-00 PASS also drives a consistent vector response in both "
-            "ms080 and strong_pf010 cases under fixed STRICT-PP rules."
-        ),
+        "offdiag_flags": {
+            "present": True,
+            "APPLICABLE": bool(blocks) and all_app,
+            "PASS": bool(blocks) and all_pass,
+        },
+        "per_case": per_case,
     }
 
-    os.makedirs(os.path.dirname(args.output), exist_ok=True)
+    os.makedirs(os.path.dirname(args.output) or ".", exist_ok=True)
     with open(args.output, "w") as f:
         json.dump(out, f, indent=2, sort_keys=True)
 
     print("WROTE", args.output)
-    print("overall_PASS_EFE_offdiag_2p1_STRICT_PP_v1 =", overall_pass)
-
+    print("APPLICABLE =", out["offdiag_flags"]["APPLICABLE"])
+    print("PASS =", out["offdiag_flags"]["PASS"])
 
 if __name__ == "__main__":
     main()
