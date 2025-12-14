@@ -9,14 +9,15 @@
     "reason": "STRICT PP deflection E2 status (512\u00d7512). Aggregates v7 late-window deflection-front artifacts for ms080 and strong_pf010. No new observables, no PDE/Poisson, no GR ansatz, no regression."
   },
   "deflection_status_json": "src/gr_strict_pp_scalar/PP_deflection_E2_status_512_STRICT_PP_v1.json",
-  "notes": "STRICT PP master EFE status @512. Legacy key overall_PASS_EFE_scalar_vector_strict_PP_512_v1 gates scalar+vector only. Extended key overall_PASS_EFE_scalar_vector_offdiag_deflection_strict_PP_512_v2 gates scalar+vector+offdiag+deflection (E2 deflection preferred). No PDE/Laplacian/Poisson/GR ansatz/regression.",
+  "notes": "STRICT PP master EFE status @512. v1 gates scalar+vector only. v2 gates scalar+vector+offdiag+deflection (E2 deflection preferred). v3 further gates on structural status (closure+bianchi). No PDE/Laplacian/Poisson/GR ansatz/regression.",
   "offdiag_flags": {
     "ALL_PASS_offdiag_2p1_strict_PP_512_v1": true,
     "APPLICABLE": true,
-    "offdiag_status_json": "src/gr_strict_pp_scalar/PP_EFE_offdiag_2p1_status_512_STRICT_PP_v1.json",
+    "offdiag_status_json": "src/gr_strict_pp_scalar/PP_EFE_offdiag_2p1_status_512_STRICT_PP_v2.json",
     "present": true
   },
-  "offdiag_status_json": "src/gr_strict_pp_scalar/PP_EFE_offdiag_2p1_status_512_STRICT_PP_v1.json",
+  "offdiag_status_json": "src/gr_strict_pp_scalar/PP_EFE_offdiag_2p1_status_512_STRICT_PP_v2.json",
+  "overall_PASS_EFE_scalar_vector_offdiag_deflection_closure_bianchi_strict_PP_512_v3": true,
   "overall_PASS_EFE_scalar_vector_offdiag_deflection_strict_PP_512_v2": true,
   "overall_PASS_EFE_scalar_vector_strict_PP_512_v1": true,
   "policy": {
@@ -27,6 +28,13 @@
     "overall_PASS_scalar_EFE00_strict_PP_v1": true
   },
   "scalar_status_json": "src/gr_strict_pp_scalar/PP_scalar_EFE00_status_512_strict_PP_v1.json",
+  "structural_flags": {
+    "APPLICABLE": true,
+    "PASS": true,
+    "present": true,
+    "structural_status_json": "src/gr_strict_pp_scalar/PP_EFE_structural_status_512_STRICT_PP_v1.json"
+  },
+  "structural_status_json": "src/gr_strict_pp_scalar/PP_EFE_structural_status_512_STRICT_PP_v1.json",
   "vector_flags": {
     "overall_PASS_vector_EFE_strict_PP_v1": true
   },

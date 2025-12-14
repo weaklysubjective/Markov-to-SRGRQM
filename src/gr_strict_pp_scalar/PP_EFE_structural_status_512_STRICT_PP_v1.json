@@ -1,0 +1,49 @@
+{
+  "H": 512,
+  "PASS": {
+    "ALL_PASS_structural_status_512_STRICT_PP_v1": true,
+    "APPLICABLE": true
+  },
+  "STRICT_PP": true,
+  "W": 512,
+  "notes": "STRICT PP structural status @512. Aggregates tensor-closure audit (v2) and Bianchi-proxy audit (v2) per case. No new observables, no PDE/Poisson, no smoothing, no GR ansatz, no regression.",
+  "per_case": [
+    {
+      "APPLICABLE": true,
+      "PASS_structural_case_v1": true,
+      "bianchi": {
+        "ALL_PASS": true,
+        "path": "src/gr_strict_pp_scalar/PP_EFE_bianchi_audit_512_ms080_v2.json",
+        "present": true
+      },
+      "case": "ms080",
+      "closure": {
+        "ALL_PASS": true,
+        "path": "src/gr_strict_pp_scalar/PP_EFE_tensor_closure_audit_512_ms080_v2.json",
+        "present": true
+      }
+    },
+    {
+      "APPLICABLE": true,
+      "PASS_structural_case_v1": true,
+      "bianchi": {
+        "ALL_PASS": true,
+        "path": "src/gr_strict_pp_scalar/PP_EFE_bianchi_audit_512_strong_pf010_v2.json",
+        "present": true
+      },
+      "case": "strong_pf010",
+      "closure": {
+        "ALL_PASS": true,
+        "path": "src/gr_strict_pp_scalar/PP_EFE_tensor_closure_audit_512_strong_pf010_v2.json",
+        "present": true
+      }
+    }
+  ],
+  "policy": {
+    "allow_na_case": false
+  },
+  "summary": {
+    "n_applicable_cases": 2,
+    "n_missing_cases": 0
+  }
+}

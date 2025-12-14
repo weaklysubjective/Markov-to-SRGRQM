@@ -1,0 +1,40 @@
+{
+  "H": 512,
+  "PASS": {
+    "ALL_PASS_tensor_closure_audit_v2": true,
+    "PASS_core_sign_consistency": true,
+    "PASS_momentum_divergence_small_graph": true,
+    "PASS_offdiag_symmetry_small_flux": true
+  },
+  "STRICT_PP": true,
+  "W": 512,
+  "device": "cuda",
+  "diagnostics": {
+    "core_match_frac_sign(G00, kappa*T00)": 1.0,
+    "graph_div_rel_l1(||div(F)||_1 / ||rho||_1)": 3.3973670951202334e-17,
+    "n_edges_used": 538548,
+    "paired_flux_antisym_rel_l1(sum|Fij-Fji| / sum|F|)": 2.162592582500718e-17
+  },
+  "inputs": {
+    "G00": "src/gr_strict_pp_scalar/PP_markov_tau_geometry_512_strong_pf010_PPV1.npz",
+    "G00_key": "G00_med",
+    "edges": "./edges_ca_v3_strong_pf010_512x512_PPV1_E2.txt",
+    "eps_rho": 1e-30,
+    "mask": "src/gr_strict_pp_scalar/PP_markov_tau_geometry_512_strong_pf010_PPV1.npz",
+    "mask_key": "mass_core_mask",
+    "require_bidirected": true,
+    "rho": "src/gr_strict_pp_scalar/PP_markov_tau_geometry_512_strong_pf010_PPV1.npz",
+    "rho_key": "T00",
+    "topk_frac_used_if_no_mask": null
+  },
+  "kappa": {
+    "kappa_med": -77030.34243896327,
+    "n_core_valid": 80
+  },
+  "notes": "Tensor-closure audit v2 (STRICT PP): builds a reversible Metropolis\u2013Hastings Markov kernel on the supplied edge graph so that the provided rho/T00 is the stationary distribution. Uses resulting edge flux F_ij=rho_i P_ij, whose graph divergence is (numerically) zero away from numerical error. No PDE/Poisson, no smoothing, no GR ansatz, no regression.",
+  "thresholds": {
+    "antisym_rel_l1_max": 1e-12,
+    "core_match_frac_min": 0.9,
+    "div_rel_l1_max": 1e-06
+  }
+}
