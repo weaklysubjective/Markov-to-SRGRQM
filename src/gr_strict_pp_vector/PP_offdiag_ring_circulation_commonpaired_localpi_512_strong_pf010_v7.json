@@ -1,0 +1,455 @@
+{
+  "H": 512,
+  "PASS": {
+    "ALL_PASS_offdiag_ring_circulation_commonpaired_localpi_v7": true,
+    "APPLICABLE": true,
+    "PASS_abs_small_pi_local_all_bands": true,
+    "PASS_abs_small_uniform_all_bands": true,
+    "PASS_delta_pi_local_median": true,
+    "PASS_delta_uniform_median": true,
+    "PASS_pi_local_converged_all_applicable_bands": true
+  },
+  "STRICT_PP": true,
+  "W": 512,
+  "case": "strong_pf010",
+  "device": "cuda",
+  "inputs": {
+    "abs_max": 0.03,
+    "bands": "0.55-0.60,0.60-0.65,0.65-0.70,0.70-0.75,0.75-0.80",
+    "delta_max": 0.03,
+    "dflat_key": "d_flat",
+    "edges_curved": "./edges_ca_v3_strong_pf010_512x512_PPV1_E2.txt",
+    "edges_flat": "./edges_ca_v3_flat_512x512_PPV1_E2.txt",
+    "mask_key": "mass_core_mask",
+    "min_common_edges": 160,
+    "pi_iters": 5000,
+    "pi_l1_last_max": 0.0005,
+    "pi_tol": 1e-06,
+    "tau_npz": "src/gr_strict_pp_scalar/PP_markov_tau_geometry_512_strong_pf010_PPV1.npz"
+  },
+  "mass_center_rc": [
+    246.1875,
+    223.5
+  ],
+  "notes": "STRICT PP ring circulation diagnostic (v7). Uses ONLY undirected pairs bidirected in BOTH graphs (common-paired) within each band, and computes stationary pi LOCALLY on the induced band subgraph (per graph) to prevent global-pi contamination from mass core / global inhomogeneity. No PDE/Poisson, no smoothing, no GR ansatz, no regression.",
+  "per_band": [
+    {
+      "band": {
+        "d_flat_hi": 40.0,
+        "d_flat_lo": 38.0,
+        "qhi": 0.6,
+        "qlo": 0.55,
+        "ring_frac": 0.060535430908203125
+      },
+      "common": {
+        "band_applicable": true,
+        "min_common_edges": 160,
+        "n_common_pairs": 84,
+        "n_edges_curved": 168,
+        "n_edges_flat": 168
+      },
+      "pi_local": {
+        "curved": {
+          "APPLICABLE": true,
+          "denom_step": 1.0887601375579834,
+          "frac_net_over_step": 3.42158954020625e-09,
+          "n_edges": 168,
+          "net": 3.725290298461914e-09,
+          "tag": "curved",
+          "weight_mode": "pi_local"
+        },
+        "delta": 0.0,
+        "flat": {
+          "APPLICABLE": true,
+          "denom_step": 1.0887601375579834,
+          "frac_net_over_step": 3.42158954020625e-09,
+          "n_edges": 168,
+          "net": 3.725290298461914e-09,
+          "tag": "flat",
+          "weight_mode": "pi_local"
+        }
+      },
+      "uniform": {
+        "curved": {
+          "APPLICABLE": true,
+          "denom_step": 45.72792434692383,
+          "frac_net_over_step": 0.0,
+          "n_edges": 168,
+          "net": 0.0,
+          "weight_mode": "uniform"
+        },
+        "delta": 0.0,
+        "flat": {
+          "APPLICABLE": true,
+          "denom_step": 45.72792434692383,
+          "frac_net_over_step": 0.0,
+          "n_edges": 168,
+          "net": 0.0,
+          "weight_mode": "uniform"
+        }
+      }
+    },
+    {
+      "band": {
+        "d_flat_hi": 43.0,
+        "d_flat_lo": 40.0,
+        "qhi": 0.65,
+        "qlo": 0.6,
+        "ring_frac": 0.07741165161132812
+      },
+      "common": {
+        "band_applicable": true,
+        "min_common_edges": 160,
+        "n_common_pairs": 126,
+        "n_edges_curved": 252,
+        "n_edges_flat": 252
+      },
+      "pi_local": {
+        "curved": {
+          "APPLICABLE": true,
+          "denom_step": 1.1150591373443604,
+          "frac_net_over_step": 0.0,
+          "n_edges": 252,
+          "net": 0.0,
+          "tag": "curved",
+          "weight_mode": "pi_local"
+        },
+        "delta": 0.0,
+        "flat": {
+          "APPLICABLE": true,
+          "denom_step": 1.1150591373443604,
+          "frac_net_over_step": 0.0,
+          "n_edges": 252,
+          "net": 0.0,
+          "tag": "flat",
+          "weight_mode": "pi_local"
+        }
+      },
+      "uniform": {
+        "curved": {
+          "APPLICABLE": true,
+          "denom_step": 70.99873352050781,
+          "frac_net_over_step": -0.00032232080435454924,
+          "n_edges": 252,
+          "net": -0.022884368896484375,
+          "weight_mode": "uniform"
+        },
+        "delta": -0.00032232080435454924,
+        "flat": {
+          "APPLICABLE": true,
+          "denom_step": 70.24873352050781,
+          "frac_net_over_step": 0.0,
+          "n_edges": 252,
+          "net": 0.0,
+          "weight_mode": "uniform"
+        }
+      }
+    },
+    {
+      "band": {
+        "d_flat_hi": 46.0,
+        "d_flat_lo": 43.0,
+        "qhi": 0.7,
+        "qlo": 0.65,
+        "ring_frac": 0.06812286376953125
+      },
+      "common": {
+        "band_applicable": true,
+        "min_common_edges": 160,
+        "n_common_pairs": 114,
+        "n_edges_curved": 228,
+        "n_edges_flat": 228
+      },
+      "pi_local": {
+        "curved": {
+          "APPLICABLE": true,
+          "denom_step": 1.1017367839813232,
+          "frac_net_over_step": 0.0,
+          "n_edges": 228,
+          "net": 0.0,
+          "tag": "curved",
+          "weight_mode": "pi_local"
+        },
+        "delta": 0.0,
+        "flat": {
+          "APPLICABLE": true,
+          "denom_step": 1.1017367839813232,
+          "frac_net_over_step": 0.0,
+          "n_edges": 228,
+          "net": 0.0,
+          "tag": "flat",
+          "weight_mode": "pi_local"
+        }
+      },
+      "uniform": {
+        "curved": {
+          "APPLICABLE": true,
+          "denom_step": 62.79899597167969,
+          "frac_net_over_step": 7.593069774844221e-09,
+          "n_edges": 228,
+          "net": 4.76837158203125e-07,
+          "weight_mode": "uniform"
+        },
+        "delta": 0.0,
+        "flat": {
+          "APPLICABLE": true,
+          "denom_step": 62.79899597167969,
+          "frac_net_over_step": 7.593069774844221e-09,
+          "n_edges": 228,
+          "net": 4.76837158203125e-07,
+          "weight_mode": "uniform"
+        }
+      }
+    },
+    {
+      "band": {
+        "d_flat_hi": 49.0,
+        "d_flat_lo": 46.0,
+        "qhi": 0.75,
+        "qlo": 0.7,
+        "ring_frac": 0.059520721435546875
+      },
+      "common": {
+        "band_applicable": true,
+        "min_common_edges": 160,
+        "n_common_pairs": 98,
+        "n_edges_curved": 196,
+        "n_edges_flat": 196
+      },
+      "pi_local": {
+        "curved": {
+          "APPLICABLE": true,
+          "denom_step": 1.1183466911315918,
+          "frac_net_over_step": 0.0,
+          "n_edges": 196,
+          "net": 0.0,
+          "tag": "curved",
+          "weight_mode": "pi_local"
+        },
+        "delta": 0.0,
+        "flat": {
+          "APPLICABLE": true,
+          "denom_step": 1.1183466911315918,
+          "frac_net_over_step": 0.0,
+          "n_edges": 196,
+          "net": 0.0,
+          "tag": "flat",
+          "weight_mode": "pi_local"
+        }
+      },
+      "uniform": {
+        "curved": {
+          "APPLICABLE": true,
+          "denom_step": 54.79899215698242,
+          "frac_net_over_step": 0.0,
+          "n_edges": 196,
+          "net": 0.0,
+          "weight_mode": "uniform"
+        },
+        "delta": 0.0,
+        "flat": {
+          "APPLICABLE": true,
+          "denom_step": 54.79899215698242,
+          "frac_net_over_step": 0.0,
+          "n_edges": 196,
+          "net": 0.0,
+          "weight_mode": "uniform"
+        }
+      }
+    },
+    {
+      "band": {
+        "d_flat_hi": 53.0,
+        "d_flat_lo": 49.0,
+        "qhi": 0.8,
+        "qlo": 0.75,
+        "ring_frac": 0.06505966186523438
+      },
+      "common": {
+        "band_applicable": true,
+        "min_common_edges": 160,
+        "n_common_pairs": 99,
+        "n_edges_curved": 198,
+        "n_edges_flat": 198
+      },
+      "pi_local": {
+        "curved": {
+          "APPLICABLE": true,
+          "denom_step": 1.1380711793899536,
+          "frac_net_over_step": 6.546673645595351e-09,
+          "n_edges": 198,
+          "net": 7.450580596923828e-09,
+          "tag": "curved",
+          "weight_mode": "pi_local"
+        },
+        "delta": 0.0,
+        "flat": {
+          "APPLICABLE": true,
+          "denom_step": 1.1380711793899536,
+          "frac_net_over_step": 6.546673645595351e-09,
+          "n_edges": 198,
+          "net": 7.450580596923828e-09,
+          "tag": "flat",
+          "weight_mode": "pi_local"
+        }
+      },
+      "uniform": {
+        "curved": {
+          "APPLICABLE": true,
+          "denom_step": 56.33452224731445,
+          "frac_net_over_step": 0.0,
+          "n_edges": 198,
+          "net": 0.0,
+          "weight_mode": "uniform"
+        },
+        "delta": 0.0,
+        "flat": {
+          "APPLICABLE": true,
+          "denom_step": 56.33452224731445,
+          "frac_net_over_step": 0.0,
+          "n_edges": 198,
+          "net": 0.0,
+          "weight_mode": "uniform"
+        }
+      }
+    }
+  ],
+  "pi_local_per_band": [
+    {
+      "band": {
+        "d_flat_hi": 40.0,
+        "d_flat_lo": 38.0,
+        "qhi": 0.6,
+        "qlo": 0.55,
+        "ring_frac": 0.060535430908203125
+      },
+      "curved_local_pi": {
+        "APPLICABLE": true,
+        "M_nodes": 113,
+        "iters": 1,
+        "l1_last": 0.0,
+        "reached_tol": true,
+        "tol": 1e-06
+      },
+      "flat_local_pi": {
+        "APPLICABLE": true,
+        "M_nodes": 113,
+        "iters": 1,
+        "l1_last": 0.0,
+        "reached_tol": true,
+        "tol": 1e-06
+      }
+    },
+    {
+      "band": {
+        "d_flat_hi": 43.0,
+        "d_flat_lo": 40.0,
+        "qhi": 0.65,
+        "qlo": 0.6,
+        "ring_frac": 0.07741165161132812
+      },
+      "curved_local_pi": {
+        "APPLICABLE": true,
+        "M_nodes": 149,
+        "iters": 1,
+        "l1_last": 2.123415470123291e-07,
+        "reached_tol": true,
+        "tol": 1e-06
+      },
+      "flat_local_pi": {
+        "APPLICABLE": true,
+        "M_nodes": 149,
+        "iters": 1,
+        "l1_last": 2.123415470123291e-07,
+        "reached_tol": true,
+        "tol": 1e-06
+      }
+    },
+    {
+      "band": {
+        "d_flat_hi": 46.0,
+        "d_flat_lo": 43.0,
+        "qhi": 0.7,
+        "qlo": 0.65,
+        "ring_frac": 0.06812286376953125
+      },
+      "curved_local_pi": {
+        "APPLICABLE": true,
+        "M_nodes": 132,
+        "iters": 1,
+        "l1_last": 0.0,
+        "reached_tol": true,
+        "tol": 1e-06
+      },
+      "flat_local_pi": {
+        "APPLICABLE": true,
+        "M_nodes": 132,
+        "iters": 1,
+        "l1_last": 0.0,
+        "reached_tol": true,
+        "tol": 1e-06
+      }
+    },
+    {
+      "band": {
+        "d_flat_hi": 49.0,
+        "d_flat_lo": 46.0,
+        "qhi": 0.75,
+        "qlo": 0.7,
+        "ring_frac": 0.059520721435546875
+      },
+      "curved_local_pi": {
+        "APPLICABLE": true,
+        "M_nodes": 118,
+        "iters": 1,
+        "l1_last": 0.0,
+        "reached_tol": true,
+        "tol": 1e-06
+      },
+      "flat_local_pi": {
+        "APPLICABLE": true,
+        "M_nodes": 118,
+        "iters": 1,
+        "l1_last": 0.0,
+        "reached_tol": true,
+        "tol": 1e-06
+      }
+    },
+    {
+      "band": {
+        "d_flat_hi": 53.0,
+        "d_flat_lo": 49.0,
+        "qhi": 0.8,
+        "qlo": 0.75,
+        "ring_frac": 0.06505966186523438
+      },
+      "curved_local_pi": {
+        "APPLICABLE": true,
+        "M_nodes": 118,
+        "iters": 1,
+        "l1_last": 0.0,
+        "reached_tol": true,
+        "tol": 1e-06
+      },
+      "flat_local_pi": {
+        "APPLICABLE": true,
+        "M_nodes": 118,
+        "iters": 1,
+        "l1_last": 0.0,
+        "reached_tol": true,
+        "tol": 1e-06
+      }
+    }
+  ],
+  "results": {
+    "abs_fail_bands_pi_local": 0,
+    "abs_fail_bands_uniform": 0,
+    "median_abs_delta_pi_local": 0.0,
+    "median_abs_delta_uniform": 0.0,
+    "median_delta_pi_local": 0.0,
+    "median_delta_uniform": 0.0,
+    "n_applicable_bands_pi_local": 5,
+    "n_applicable_bands_uniform": 5,
+    "n_pi_local_bands_checked": 5
+  }
+}
