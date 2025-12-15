@@ -1,0 +1,22 @@
+{
+  "H": 512,
+  "PASS": {
+    "ALL_PASS_real_EFE_strict_PP_512_v1": true,
+    "PASS_master_v3": true,
+    "PASS_perihelion_optional": null,
+    "PASS_strongfield_suite": true,
+    "PASS_tensor_3p1": true
+  },
+  "STRICT_PP": true,
+  "W": 512,
+  "device": "gpu",
+  "inputs": {
+    "master_json": "src/gr_strict_pp_scalar/PP_EFE_scalar_vector_status_512_STRICT_PP_v1.json",
+    "perihelion_json": null,
+    "strongfield_json": "src/gr_strict_pp_scalar/PP_EFE_strongfield_suite_status_512_STRICT_PP_v1.json"
+  },
+  "notes": "Top-level STRICT PP 'REAL EFE' binder: requires master v3 + tensor_3p1 + strongfield suite. Perihelion is optional until 512 artifacts exist.",
+  "policy": {
+    "allow_na_perihelion": false
+  }
+}
