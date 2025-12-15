@@ -1,0 +1,29 @@
+{
+  "H": 512,
+  "PASS": {
+    "ALL_PASS_strongfield_suite_strict_PP_512_v1": true,
+    "PASS_deflection_E2": true,
+    "PASS_master_v3": true,
+    "PASS_perihelion_mass": null,
+    "PASS_perihelion_strong": null,
+    "PASS_shapiro_mass": true,
+    "PASS_shapiro_strong": true,
+    "PASS_tensor_3p1": true
+  },
+  "STRICT_PP": true,
+  "W": 512,
+  "device": "gpu",
+  "inputs": {
+    "deflection_status_json": "src/gr_strict_pp_scalar/PP_deflection_E2_status_512_STRICT_PP_v1.json",
+    "master_status_json": "src/gr_strict_pp_scalar/PP_EFE_scalar_vector_status_512_STRICT_PP_v1.json",
+    "perihelion_mass_json": null,
+    "perihelion_strong_json": null,
+    "shapiro_mass_json": "src/gr_strict_pp_scalar/PP_Shapiro_markov_tau_512_mass_ms080_PPV1.json",
+    "shapiro_strong_json": "src/gr_strict_pp_scalar/PP_Shapiro_markov_tau_512_strong_pf010_PPV1.json",
+    "tensor_3p1_status_json": "src/gr_strict_pp_scalar/PP_EFE_tensor_3p1_status_512_STRICT_PP_v1.json"
+  },
+  "notes": "STRICT PP strong-field suite binder: gates on (master v3) + (tensor_3p1) + (Shapiro both cases) + (deflection E2). Perihelion is optional until 512 artifacts are provided. Shapiro PASS extraction is liberal over prior keying styles (v1/v2_sparse).",
+  "policy": {
+    "allow_na_perihelion": false
+  }
+}
