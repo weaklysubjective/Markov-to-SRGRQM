@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import argparse, json, os
-from typing import Any, Optional, Iterable, Tuple
+from typing import Any, Optional, Iterable
 
 def load_json(p: str) -> Any:
     with open(p, "r") as f:
@@ -51,9 +51,9 @@ def _find_any_bool(obj: Any, keys: Iterable[str]) -> Optional[bool]:
 
 def _extract_named_pass_from_PASS_dict(j: Any) -> Optional[bool]:
     """
-    Many of your status JSONs follow:
+    Many status JSONs follow:
       { "PASS": { "ALL_PASS_<name>": true, ... }, ... }
-    This tries to find any boolean True/False in j["PASS"] that looks like an ALL_PASS/overall_PASS/PASS marker.
+    Try to find any boolean in j["PASS"] that looks like ALL_PASS/overall_PASS/PASS.
     """
     if not isinstance(j, dict):
         return None
@@ -61,16 +61,16 @@ def _extract_named_pass_from_PASS_dict(j: Any) -> Optional[bool]:
     if not isinstance(P, dict):
         return None
 
-    # Prefer explicit ALL_PASS / overall_PASS keys if present
+    # Prefer explicit ALL_PASS / overall_PASS / PASS keys
     for k in list(P.keys()):
         if k.startswith("ALL_PASS") or k.startswith("overall_PASS") or k == "PASS":
             b = _as_bool(P.get(k), None)
             if b is not None:
                 return b
 
-    # Otherwise, if PASS dict has exactly one bool-like value, use it
+    # Otherwise if PASS dict has exactly one bool-like value, use it
     bool_vals = []
-    for k, v in P.items():
+    for _, v in P.items():
         b = _as_bool(v, None)
         if b is not None:
             bool_vals.append(b)
@@ -79,48 +79,28 @@ def _extract_named_pass_from_PASS_dict(j: Any) -> Optional[bool]:
     return None
 
 def _extract_pass_shapiro(j: Any) -> Optional[bool]:
-    """
-    Shapiro artifacts have varied keying across v1/v2_sparse and case variants.
-    This is intentionally liberal and STRICT-PP-safe: it only reads reported PASS flags.
-    """
     if j is None:
         return None
 
-    # 1) Common explicit keys (top-level or nested)
     candidates = [
-        # Generic
-        "ALL_PASS",
-        "overall_PASS",
-        "PASS",
-
-        # Common Shapiro names (case-insensitive via recursive key search on exact tokens)
-        "ALL_PASS_Shapiro",
-        "overall_PASS_Shapiro",
-        "PASS_Shapiro",
-
-        # Markov-tau Shapiro variants
+        "ALL_PASS", "overall_PASS", "PASS",
+        "ALL_PASS_Shapiro", "overall_PASS_Shapiro", "PASS_Shapiro",
         "ALL_PASS_Shapiro_markov_tau_v1",
         "ALL_PASS_Shapiro_markov_tau_v2_sparse",
         "PASS_Shapiro_markov_tau_v2_sparse",
         "PASS_Shapiro_markov_tau",
-
-        # 512-named variants (some scripts embed res in named key)
         "ALL_PASS_Shapiro_markov_tau_512_strict_PP_v1",
         "ALL_PASS_Shapiro_markov_tau_512_STRICT_PP_v1",
         "overall_PASS_Shapiro_markov_tau_512_strict_PP_v1",
-
-        # If your JSON stores a nested PASS map, we’ll also catch those below
     ]
     v = _find_any_bool(j, candidates)
     if v is not None:
         return v
 
-    # 2) Look inside {"PASS": {...}} patterns
     v2 = _extract_named_pass_from_PASS_dict(j)
     if v2 is not None:
         return v2
 
-    # 3) Some scripts store under "summary" or "results" with PASS-like key
     v3 = _find_any_bool(j, [
         "ALL_PASS_Shapiro_markov_tau",
         "overall_PASS_Shapiro_markov_tau",
@@ -155,7 +135,7 @@ def main():
     ap.add_argument("--W", type=int, default=512)
     ap.add_argument("--device", default="gpu", help="Recorded only.")
 
-    # “Real EFE” / structural binder inputs
+    # Single source of truth + master
     ap.add_argument("--tensor_3p1_status_json",
                     default="src/gr_strict_pp_scalar/PP_EFE_tensor_3p1_status_512_STRICT_PP_v1.json")
     ap.add_argument("--master_status_json",
@@ -186,30 +166,25 @@ def main():
     k_master = "overall_PASS_EFE_scalar_vector_offdiag_deflection_closure_bianchi_strict_PP_512_v3"
     master_pass = bool(_find_any_bool(M, [k_master]) is True)
 
-    # Require tensor_3p1 binder if present
-    t3p1_pass = False
-    if _exists(args.tensor_3p1_status_json):
-        T = load_json(args.tensor_3p1_status_json)
-        t3p1_pass = bool(_find_any_bool(T, ["ALL_PASS_EFE_tensor_3p1_strict_PP_512_v1"]) is True)
+    # Require tensor_3p1 binder (SINGLE SOURCE OF TRUTH schema)
+    if not _exists(args.tensor_3p1_status_json):
+        raise SystemExit(f"Missing tensor_3p1_status_json: {args.tensor_3p1_status_json}")
+    T3 = load_json(args.tensor_3p1_status_json)
+    t3p1_pass = bool(_as_bool(((T3 or {}).get("PASS") or {}).get("ALL_PASS_EFE_tensor_3p1_strict_PP_512_v1"), False) is True)
 
     # Shapiro gates (strict: file must exist and PASS must be discoverable & true)
-    sh_mass_ok = None
-    sh_strong_ok = None
+    if not _exists(args.shapiro_mass_json):
+        raise SystemExit(f"Missing shapiro_mass_json: {args.shapiro_mass_json}")
+    if not _exists(args.shapiro_strong_json):
+        raise SystemExit(f"Missing shapiro_strong_json: {args.shapiro_strong_json}")
 
-    if _exists(args.shapiro_mass_json):
-        S = load_json(args.shapiro_mass_json)
-        sh_mass_ok = _extract_pass_shapiro(S)
-        sh_mass_ok = bool(sh_mass_ok is True) if sh_mass_ok is not None else False
-    else:
-        sh_mass_ok = False
+    Sm = load_json(args.shapiro_mass_json)
+    Ss = load_json(args.shapiro_strong_json)
 
-    if _exists(args.shapiro_strong_json):
-        S = load_json(args.shapiro_strong_json)
-        sh_strong_ok = _extract_pass_shapiro(S)
-        sh_strong_ok = bool(sh_strong_ok is True) if sh_strong_ok is not None else False
-    else:
-        sh_strong_ok = False
-
+    sh_mass_ok = _extract_pass_shapiro(Sm)
+    sh_strong_ok = _extract_pass_shapiro(Ss)
+    sh_mass_ok = bool(sh_mass_ok is True)
+    sh_strong_ok = bool(sh_strong_ok is True)
     shapiro_gate = bool(sh_mass_ok and sh_strong_ok)
 
     # Deflection E2 gate
@@ -275,13 +250,10 @@ def main():
             "PASS_perihelion_strong": per_strong_ok,
             "ALL_PASS_strongfield_suite_strict_PP_512_v1": overall,
         },
-        "policy": {
-            "allow_na_perihelion": bool(args.allow_na_perihelion),
-        },
+        "policy": {"allow_na_perihelion": bool(args.allow_na_perihelion)},
         "notes": (
-            "STRICT PP strong-field suite binder: gates on (master v3) + (tensor_3p1) + (Shapiro both cases) + (deflection E2). "
-            "Perihelion is optional until 512 artifacts are provided. "
-            "Shapiro PASS extraction is liberal over prior keying styles (v1/v2_sparse)."
+            "STRICT PP strong-field suite binder: gates on (master v3) + (tensor_3p1 via single source of truth) "
+            "+ (Shapiro both cases) + (deflection E2). Perihelion optional."
         ),
     }
 
@@ -294,4 +266,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

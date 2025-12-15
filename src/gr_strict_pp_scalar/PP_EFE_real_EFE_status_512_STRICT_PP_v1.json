@@ -13,9 +13,10 @@
   "inputs": {
     "master_json": "src/gr_strict_pp_scalar/PP_EFE_scalar_vector_status_512_STRICT_PP_v1.json",
     "perihelion_json": null,
-    "strongfield_json": "src/gr_strict_pp_scalar/PP_EFE_strongfield_suite_status_512_STRICT_PP_v1.json"
+    "strongfield_json": "src/gr_strict_pp_scalar/PP_EFE_strongfield_suite_status_512_STRICT_PP_v1.json",
+    "tensor_3p1_json": "src/gr_strict_pp_scalar/PP_EFE_tensor_3p1_status_512_STRICT_PP_v1.json"
   },
-  "notes": "Top-level STRICT PP 'REAL EFE' binder: requires master v3 + tensor_3p1 + strongfield suite. Perihelion is optional until 512 artifacts exist.",
+  "notes": "Top-level STRICT PP 'REAL EFE' binder: requires master v3 + tensor_3p1 (single source of truth JSON) + strongfield suite. Perihelion is optional until 512 artifacts exist.",
   "policy": {
     "allow_na_perihelion": false
   }

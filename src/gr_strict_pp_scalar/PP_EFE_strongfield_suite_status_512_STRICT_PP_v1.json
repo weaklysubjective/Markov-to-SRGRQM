@@ -22,7 +22,7 @@
     "shapiro_strong_json": "src/gr_strict_pp_scalar/PP_Shapiro_markov_tau_512_strong_pf010_PPV1.json",
     "tensor_3p1_status_json": "src/gr_strict_pp_scalar/PP_EFE_tensor_3p1_status_512_STRICT_PP_v1.json"
   },
-  "notes": "STRICT PP strong-field suite binder: gates on (master v3) + (tensor_3p1) + (Shapiro both cases) + (deflection E2). Perihelion is optional until 512 artifacts are provided. Shapiro PASS extraction is liberal over prior keying styles (v1/v2_sparse).",
+  "notes": "STRICT PP strong-field suite binder: gates on (master v3) + (tensor_3p1 via single source of truth) + (Shapiro both cases) + (deflection E2). Perihelion optional.",
   "policy": {
     "allow_na_perihelion": false
   }

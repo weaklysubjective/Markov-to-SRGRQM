@@ -57,44 +57,56 @@ def main():
     ap.add_argument("--W", type=int, default=512)
     ap.add_argument("--device", default="gpu", help="Recorded only.")
 
-    ap.add_argument("--master_json",
-                    default="src/gr_strict_pp_scalar/PP_EFE_scalar_vector_status_512_STRICT_PP_v1.json")
-    ap.add_argument("--strongfield_json",
-                    default="src/gr_strict_pp_scalar/PP_EFE_strongfield_suite_status_512_STRICT_PP_v1.json")
+    ap.add_argument(
+        "--master_json",
+        default="src/gr_strict_pp_scalar/PP_EFE_scalar_vector_status_512_STRICT_PP_v1.json",
+        help="Master v3 status JSON (scalar+vector+offdiag+deflection+closure+bianchi).",
+    )
+    ap.add_argument(
+        "--tensor_3p1_json",
+        default="src/gr_strict_pp_scalar/PP_EFE_tensor_3p1_status_512_STRICT_PP_v1.json",
+        help="Single source of truth for tensor 3+1 status (binder output).",
+    )
+    ap.add_argument(
+        "--strongfield_json",
+        default="src/gr_strict_pp_scalar/PP_EFE_strongfield_suite_status_512_STRICT_PP_v1.json",
+        help="Strongfield suite status JSON.",
+    )
 
     # Optional: if you later create a 512 perihelion status binder, plug it here.
     ap.add_argument("--perihelion_json", default="")
     ap.add_argument("--allow_na_perihelion", action="store_true")
 
-    ap.add_argument("--output",
-                    default="src/gr_strict_pp_scalar/PP_EFE_real_EFE_status_512_STRICT_PP_v1.json")
+    ap.add_argument(
+        "--output",
+        default="src/gr_strict_pp_scalar/PP_EFE_real_EFE_status_512_STRICT_PP_v1.json",
+    )
     args = ap.parse_args()
 
     if not _exists(args.master_json):
         raise SystemExit(f"Missing --master_json: {args.master_json}")
+    if not _exists(args.tensor_3p1_json):
+        raise SystemExit(f"Missing --tensor_3p1_json: {args.tensor_3p1_json}")
     if not _exists(args.strongfield_json):
         raise SystemExit(f"Missing --strongfield_json: {args.strongfield_json}")
 
     M = load_json(args.master_json)
+    T3 = load_json(args.tensor_3p1_json)
     S = load_json(args.strongfield_json)
 
+    # Master v3 key (single source of truth for scalar+vector+offdiag+deflection+closure+bianchi)
     k_master = "overall_PASS_EFE_scalar_vector_offdiag_deflection_closure_bianchi_strict_PP_512_v3"
-    #k_tensor = "overall_PASS_EFE_tensor_3p1_strict_PP_512_v1"
-
-    # tensor_3p1 may be recorded either in master binder or in strongfield suite binder
-    tensor_ok = bool(_find_any_bool(M, [
-            "overall_PASS_EFE_tensor_3p1_strict_PP_512_v1",
-            "PASS_tensor_3p1",
-        ]) is True) or bool(_find_any_bool(S, [
-            "PASS_tensor_3p1",
-            "overall_PASS_EFE_tensor_3p1_strict_PP_512_v1",
-        ]) is True)
-
-    k_strong = "ALL_PASS_strongfield_suite_strict_PP_512_v1"
-
     master_ok = bool(_find_any_bool(M, [k_master]) is True)
-    #tensor_ok = bool(_find_any_bool(M, [k_tensor]) is True)
-    strong_ok = bool(_find_any_bool(S, [k_strong]) is True)
+
+    # Tensor 3p1: SINGLE SOURCE OF TRUTH (no fallback inference)
+    # Expected schema: T3["PASS"]["ALL_PASS_EFE_tensor_3p1_strict_PP_512_v1"] == True/False
+    tensor_ok = bool(
+        _as_bool(((T3 or {}).get("PASS") or {}).get("ALL_PASS_EFE_tensor_3p1_strict_PP_512_v1"), False) is True
+    )
+
+    # Strongfield suite key (keep robust lookup; schema may evolve)
+    k_strong = "ALL_PASS_strongfield_suite_strict_PP_512_v1"
+    strong_ok = bool(_find_any_bool(S, [k_strong, "PASS", "ALL_PASS"]) is True) if _find_any_bool(S, [k_strong]) is not None else bool(_find_any_bool(S, [k_strong]) is True)
 
     # Optional perihelion gate (currently NA in your suite)
     per_ok: Optional[bool] = None
@@ -119,6 +131,7 @@ def main():
         "STRICT_PP": True,
         "inputs": {
             "master_json": args.master_json,
+            "tensor_3p1_json": args.tensor_3p1_json,
             "strongfield_json": args.strongfield_json,
             "perihelion_json": args.perihelion_json or None,
         },
@@ -131,8 +144,8 @@ def main():
         },
         "policy": {"allow_na_perihelion": bool(args.allow_na_perihelion)},
         "notes": (
-            "Top-level STRICT PP 'REAL EFE' binder: requires master v3 + tensor_3p1 + strongfield suite. "
-            "Perihelion is optional until 512 artifacts exist."
+            "Top-level STRICT PP 'REAL EFE' binder: requires master v3 + tensor_3p1 (single source of truth JSON) "
+            "+ strongfield suite. Perihelion is optional until 512 artifacts exist."
         ),
     }
 
