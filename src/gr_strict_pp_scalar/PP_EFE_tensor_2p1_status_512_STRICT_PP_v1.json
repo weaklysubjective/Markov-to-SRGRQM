@@ -1,0 +1,78 @@
+{
+  "H": 512,
+  "PASS": {
+    "ALL_PASS_tensor_2p1_status_512_STRICT_PP_v1": true,
+    "APPLICABLE": true,
+    "PASS_offdiag_2p1_all_cases": true,
+    "PASS_structural_all_cases": true
+  },
+  "STRICT_PP": true,
+  "W": 512,
+  "device": "gpu",
+  "inputs": {
+    "cases": [
+      "ms080",
+      "strong_pf010"
+    ],
+    "offdiag_status_json": "src/gr_strict_pp_scalar/PP_EFE_offdiag_2p1_status_512_STRICT_PP_v2.json",
+    "structural_json": "src/gr_strict_pp_scalar/PP_EFE_structural_status_512_STRICT_PP_v1.json"
+  },
+  "notes": "STRICT PP tensor_2p1 status @512: aggregator gate that requires (A) structural closure+bianchi and (B) offdiag 2+1 block status, per case. Pure JSON aggregator: no generators, no PDE/Poisson, no smoothing, no GR ansatz, no regression.",
+  "per_case": [
+    {
+      "APPLICABLE": true,
+      "PASS_tensor_2p1_case_v1": true,
+      "case": "ms080",
+      "debug": {
+        "missing_offdiag": false,
+        "missing_structural": false
+      },
+      "offdiag_2p1": {
+        "APPLICABLE": true,
+        "PASS": true,
+        "present_case": true,
+        "present_root": true,
+        "source_json": "src/gr_strict_pp_scalar/PP_EFE_offdiag_2p1_status_512_STRICT_PP_v2.json"
+      },
+      "structural": {
+        "APPLICABLE": true,
+        "PASS": true,
+        "present_case": true,
+        "present_root": true,
+        "source_json": "src/gr_strict_pp_scalar/PP_EFE_structural_status_512_STRICT_PP_v1.json"
+      }
+    },
+    {
+      "APPLICABLE": true,
+      "PASS_tensor_2p1_case_v1": true,
+      "case": "strong_pf010",
+      "debug": {
+        "missing_offdiag": false,
+        "missing_structural": false
+      },
+      "offdiag_2p1": {
+        "APPLICABLE": true,
+        "PASS": true,
+        "present_case": true,
+        "present_root": true,
+        "source_json": "src/gr_strict_pp_scalar/PP_EFE_offdiag_2p1_status_512_STRICT_PP_v2.json"
+      },
+      "structural": {
+        "APPLICABLE": true,
+        "PASS": true,
+        "present_case": true,
+        "present_root": true,
+        "source_json": "src/gr_strict_pp_scalar/PP_EFE_structural_status_512_STRICT_PP_v1.json"
+      }
+    }
+  ],
+  "policy": {
+    "allow_na_offdiag": false,
+    "allow_na_structural": false
+  },
+  "summary": {
+    "n_applicable_cases": 2,
+    "n_cases_total": 2,
+    "n_missing_components_cases": 0
+  }
+}

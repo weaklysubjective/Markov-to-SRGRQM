@@ -53,12 +53,17 @@ def _find_any_bool(obj: Any, keys: Iterable[str]) -> Optional[bool]:
 
 def main():
     STRUCTURAL_JSON_DEFAULT = "src/gr_strict_pp_scalar/PP_EFE_structural_status_512_STRICT_PP_v1.json"
+    TENSOR_2P1_JSON_DEFAULT = "src/gr_strict_pp_scalar/PP_EFE_tensor_2p1_status_512_STRICT_PP_v1.json"
 
     ap = argparse.ArgumentParser(
-        description="STRICT PP master EFE status @512: scalar EFE00 + vector EFE + optional offdiag 2+1 + optional deflection (E2 preferred) + structural (closure+bianchi)."
+        description="STRICT PP master EFE status @512: scalar EFE00 + vector EFE + optional offdiag 2+1 + optional deflection (E2 preferred) + structural + tensor_2p1 gate."
     )
     ap.add_argument("--H", type=int, default=512)
     ap.add_argument("--W", type=int, default=512)
+
+    # For repo-wide CLI consistency: accept --device gpu|cuda|cpu|hip, but this script aggregates JSON.
+    ap.add_argument("--device", default="gpu",
+                    help="Accepted for consistency; this script aggregates JSON only. Use gpu|cuda|cpu|hip.")
 
     ap.add_argument("--scalar_status_json", default="src/gr_strict_pp_scalar/PP_scalar_EFE00_status_512_strict_PP_v1.json")
     ap.add_argument("--vector_status_json", default="src/gr_strict_pp_vector/PP_vector_EFE_status_512_strict_PP_v1.json")
@@ -76,6 +81,13 @@ def main():
 
     ap.add_argument("--structural_json", default=STRUCTURAL_JSON_DEFAULT,
                     help="Path to PP_EFE_structural_status_512_STRICT_PP_v1.json")
+
+    # NEW: tensor_2p1 aggregated gate
+    ap.add_argument("--tensor_2p1_status_json", default=TENSOR_2P1_JSON_DEFAULT,
+                    help="Path to PP_EFE_tensor_2p1_status_512_STRICT_PP_v1.json")
+
+    ap.add_argument("--allow_na_tensor_2p1", action="store_true",
+                    help="If set, tensor_2p1 missing/NA does not gate the tensor_2p1 key (NOT recommended).")
 
     ap.add_argument("--output", default="src/gr_strict_pp_scalar/PP_EFE_scalar_vector_status_512_STRICT_PP_v1.json")
     args = ap.parse_args()
@@ -97,7 +109,6 @@ def main():
     overall_scalar_vector = bool(scalar_pass and vector_pass)
 
     # ---- offdiag (optional) ----
-    # Canonical writer shape is: {"offdiag_flags": {"APPLICABLE": bool, "PASS": bool, ...}, ...}
     offdiag_flags: dict[str, Any] = {"present": False}
     offdiag_gate_pass: bool
 
@@ -108,10 +119,11 @@ def main():
         offdiag_app  = _as_bool(of.get("APPLICABLE", None), None)
         offdiag_pass = _as_bool(of.get("PASS", None), None)
 
-        # Legacy fallbacks (only if canonical PASS missing)
         if offdiag_pass is None:
             offdiag_pass = _find_any_bool(O, [
+                "ALL_PASS_offdiag_2p1_strict_PP_512_v2",
                 "ALL_PASS_offdiag_2p1_strict_PP_512_v1",
+                "overall_PASS_offdiag_2p1_strict_PP_512_v2",
                 "overall_PASS_offdiag_2p1_strict_PP_512_v1",
                 "ALL_PASS",
                 "overall_PASS",
@@ -122,12 +134,9 @@ def main():
             "present": True,
             "offdiag_status_json": args.offdiag_status_json,
             "APPLICABLE": offdiag_app,
-            "ALL_PASS_offdiag_2p1_strict_PP_512_v1": offdiag_pass,
+            "PASS": offdiag_pass,
         }
 
-        # STRICT gating:
-        # - If explicitly applicable => require PASS true.
-        # - If NA (APPLICABLE false or missing) => gate depends on allow_na_offdiag.
         if offdiag_app is True:
             offdiag_gate_pass = bool(offdiag_pass is True)
         else:
@@ -137,7 +146,7 @@ def main():
             "present": False,
             "offdiag_status_json": args.offdiag_status_json,
             "reason_missing": f"not found: {args.offdiag_status_json}",
-            "ALL_PASS_offdiag_2p1_strict_PP_512_v1": None,
+            "PASS": None,
         }
         offdiag_gate_pass = True if args.allow_na_offdiag else False
 
@@ -146,9 +155,6 @@ def main():
     defl_gate_pass: bool
 
     def _parse_deflection_status(D: Any) -> tuple[Optional[bool], Optional[bool], Optional[str]]:
-        """
-        Returns (APPLICABLE, PASS, reason). Very liberal about structure.
-        """
         AP = _find_any_bool(D, ["APPLICABLE"])
         PAS = _find_any_bool(D, [
             "PASS",
@@ -161,7 +167,6 @@ def main():
             "ALL_PASS",
         ])
         reason = _find_any(D, ["reason", "notes"])
-        # If PASS is present but APPLICABLE missing, treat as applicable (status files often omit APPLICABLE)
         if PAS is not None and AP is None:
             AP = True
         return AP, PAS, (str(reason) if reason is not None else None)
@@ -203,60 +208,107 @@ def main():
         }
         defl_gate_pass = True if args.allow_na_deflection else False
 
-    # ---- structural (closure+bianchi; required for v3 key) ----
-    structural_flags: dict[str, Any] = {
-        "present": False,
-        "APPLICABLE": None,
-        "PASS": None,
-        "structural_status_json": args.structural_json,
-    }
-    structural_gate_pass: bool = False
+    # ---- structural (closure+bianchi) ----
+    structural_flags: dict[str, Any] = {"present": False}
+    structural_gate_pass: bool
+
+    def _parse_structural_status(R: Any) -> tuple[Optional[bool], Optional[bool]]:
+        AP = _find_any_bool(R, ["APPLICABLE"])
+        PAS = _find_any_bool(R, [
+            "ALL_PASS_structural_status_512_STRICT_PP_v1",
+            "PASS_structural_case_v1",
+            "PASS_structural_case",
+            "PASS",
+            "ALL_PASS",
+            "overall_PASS",
+        ])
+        if PAS is not None and AP is None:
+            AP = True
+        return AP, PAS
 
     if _exists(args.structural_json):
         R = load_json(args.structural_json)
-
-        # Try both top-level and nested PASS dicts, but do not assume either layout.
-        st_app = _find_any_bool(R, ["APPLICABLE"])
-        st_pass = _find_any_bool(R, [
-            "ALL_PASS_structural_status_512_STRICT_PP_v1",
-            "PASS_structural_case_v1",
-            "ALL_PASS_structural_case_v1",
-            "ALL_PASS_structural_status",
-            "ALL_PASS",
-            "PASS",
-        ])
-
+        AP, PAS = _parse_structural_status(R)
         structural_flags = {
             "present": True,
             "structural_status_json": args.structural_json,
-            "APPLICABLE": st_app,
-            "PASS": st_pass,
+            "APPLICABLE": AP,
+            "PASS": PAS,
         }
-
-        # STRICT gating for v3: must be present, applicable, and pass.
-        structural_gate_pass = bool((st_app is True) and (st_pass is True))
+        # Structural is STRICT: if applicable => require PASS true; else treat NA as gate-fail
+        if AP is True:
+            structural_gate_pass = bool(PAS is True)
+        else:
+            structural_gate_pass = False
     else:
         structural_flags = {
             "present": False,
             "structural_status_json": args.structural_json,
-            "reason_missing": f"not found: {args.structural_json}",
             "APPLICABLE": None,
             "PASS": None,
+            "reason_missing": f"not found: {args.structural_json}",
         }
         structural_gate_pass = False
+
+    # ---- tensor_2p1 (NEW) ----
+    tensor_2p1_flags: dict[str, Any] = {"present": False}
+    tensor_2p1_gate_pass: bool
+
+    def _parse_tensor_2p1_status(T: Any) -> tuple[Optional[bool], Optional[bool]]:
+        AP = _find_any_bool(T, ["APPLICABLE"])
+        PAS = _find_any_bool(T, [
+            "ALL_PASS_tensor_2p1_status_512_STRICT_PP_v1",
+            "PASS_tensor_2p1_case_v1",
+            "PASS",
+            "ALL_PASS",
+            "overall_PASS",
+        ])
+        if PAS is not None and AP is None:
+            AP = True
+        return AP, PAS
+
+    if _exists(args.tensor_2p1_status_json):
+        T = load_json(args.tensor_2p1_status_json)
+        AP, PAS = _parse_tensor_2p1_status(T)
+        tensor_2p1_flags = {
+            "present": True,
+            "tensor_2p1_status_json": args.tensor_2p1_status_json,
+            "APPLICABLE": AP,
+            "PASS": PAS,
+        }
+        if AP is True:
+            tensor_2p1_gate_pass = bool(PAS is True)
+        else:
+            tensor_2p1_gate_pass = True if args.allow_na_tensor_2p1 else False
+    else:
+        tensor_2p1_flags = {
+            "present": False,
+            "tensor_2p1_status_json": args.tensor_2p1_status_json,
+            "APPLICABLE": None,
+            "PASS": None,
+            "reason_missing": f"not found: {args.tensor_2p1_status_json}",
+        }
+        tensor_2p1_gate_pass = True if args.allow_na_tensor_2p1 else False
 
     # ---- combined keys ----
     overall_extended_v2 = bool(overall_scalar_vector and offdiag_gate_pass and defl_gate_pass)
     overall_extended_v3 = bool(overall_extended_v2 and structural_gate_pass)
 
+    # New top-level key requested:
+    overall_tensor_2p1 = bool(tensor_2p1_gate_pass)
+
     out = {
         "H": int(args.H),
         "W": int(args.W),
+        "STRICT_PP": True,
+        "device": str(args.device),
+
         "notes": (
             "STRICT PP master EFE status @512. "
-            "v1 gates scalar+vector only. "
-            "v2 gates scalar+vector+offdiag+deflection (E2 deflection preferred). "
-            "v3 further gates on structural status (closure+bianchi). "
+            "Key overall_PASS_EFE_scalar_vector_strict_PP_512_v1 gates scalar+vector only. "
+            "Key overall_PASS_EFE_scalar_vector_offdiag_deflection_strict_PP_512_v2 gates scalar+vector+offdiag+deflection (E2 preferred). "
+            "Key overall_PASS_EFE_scalar_vector_offdiag_deflection_closure_bianchi_strict_PP_512_v3 gates v2 + structural(closure+bianchi). "
+            "Key overall_PASS_EFE_tensor_2p1_strict_PP_512_v1 gates tensor_2p1 aggregator (structural + offdiag_2p1), if present. "
             "No PDE/Laplacian/Poisson/GR ansatz/regression."
         ),
 
@@ -264,7 +316,8 @@ def main():
         "vector_status_json": args.vector_status_json,
         "offdiag_status_json": args.offdiag_status_json,
         "deflection_status_json": args.deflection_status_json,
-        "structural_status_json": args.structural_json,
+        "structural_json": args.structural_json,
+        "tensor_2p1_status_json": args.tensor_2p1_status_json,
 
         "scalar_flags": {"overall_PASS_scalar_EFE00_strict_PP_v1": bool(scalar_pass)},
         "vector_flags": {"overall_PASS_vector_EFE_strict_PP_v1": bool(vector_pass)},
@@ -278,9 +331,14 @@ def main():
         "structural_flags": structural_flags,
         "overall_PASS_EFE_scalar_vector_offdiag_deflection_closure_bianchi_strict_PP_512_v3": bool(overall_extended_v3),
 
+        # NEW:
+        "tensor_2p1_flags": tensor_2p1_flags,
+        "overall_PASS_EFE_tensor_2p1_strict_PP_512_v1": bool(overall_tensor_2p1),
+
         "policy": {
             "allow_na_offdiag": bool(args.allow_na_offdiag),
             "allow_na_deflection": bool(args.allow_na_deflection),
+            "allow_na_tensor_2p1": bool(args.allow_na_tensor_2p1),
         },
     }
 
@@ -291,10 +349,11 @@ def main():
     print("WROTE", args.output)
     print("overall_PASS_EFE_scalar_vector_strict_PP_512_v1 =", out["overall_PASS_EFE_scalar_vector_strict_PP_512_v1"])
     print("overall_PASS_EFE_scalar_vector_offdiag_deflection_strict_PP_512_v2 =", out["overall_PASS_EFE_scalar_vector_offdiag_deflection_strict_PP_512_v2"])
-    print("overall_PASS_EFE_scalar_vector_offdiag_deflection_closure_bianchi_strict_PP_512_v3 =",
-          out["overall_PASS_EFE_scalar_vector_offdiag_deflection_closure_bianchi_strict_PP_512_v3"])
+    print("overall_PASS_EFE_scalar_vector_offdiag_deflection_closure_bianchi_strict_PP_512_v3 =", out["overall_PASS_EFE_scalar_vector_offdiag_deflection_closure_bianchi_strict_PP_512_v3"])
+    print("overall_PASS_EFE_tensor_2p1_strict_PP_512_v1 =", out["overall_PASS_EFE_tensor_2p1_strict_PP_512_v1"])
     print("deflection(APPLICABLE,PASS) =", out["deflection_flags"].get("APPLICABLE"), out["deflection_flags"].get("PASS"))
     print("structural(APPLICABLE,PASS) =", out["structural_flags"].get("APPLICABLE"), out["structural_flags"].get("PASS"))
+    print("tensor_2p1(APPLICABLE,PASS) =", out["tensor_2p1_flags"].get("APPLICABLE"), out["tensor_2p1_flags"].get("PASS"))
 
 if __name__ == "__main__":
     main()
