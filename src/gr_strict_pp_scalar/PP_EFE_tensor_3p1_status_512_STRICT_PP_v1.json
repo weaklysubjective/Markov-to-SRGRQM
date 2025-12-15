@@ -1,0 +1,54 @@
+{
+  "H": 512,
+  "PASS": {
+    "ALL_PASS_EFE_tensor_3p1_strict_PP_512_v1": true,
+    "APPLICABLE": true,
+    "PASS_invariance": null,
+    "PASS_master_v3": true,
+    "PASS_tensor_2p1": true
+  },
+  "STRICT_PP": true,
+  "W": 512,
+  "device": "gpu",
+  "inputs": {
+    "invariance_status_json": null,
+    "master_status_json": "src/gr_strict_pp_scalar/PP_EFE_scalar_vector_status_512_STRICT_PP_v1.json",
+    "tensor_2p1_status_json": "src/gr_strict_pp_scalar/PP_EFE_tensor_2p1_status_512_STRICT_PP_v1.json"
+  },
+  "notes": "STRICT PP 512: '3+1 tensor EFE' is defined operationally as: (i) master v3 PASS (scalar+vector+offdiag+deflection+closure+bianchi), (ii) tensor_2p1 PASS, and (iii) optional invariance PASS if provided. This is a release-grade binding step; it does not introduce new observables.",
+  "policy": {
+    "allow_na_invariance": false
+  },
+  "refs": {
+    "deflection_flags": {
+      "APPLICABLE": true,
+      "PASS": true,
+      "deflection_status_json": "src/gr_strict_pp_scalar/PP_deflection_E2_status_512_STRICT_PP_v1.json",
+      "present": true,
+      "reason": "STRICT PP deflection E2 status (512\u00d7512). Aggregates v7 late-window deflection-front artifacts for ms080 and strong_pf010. No new observables, no PDE/Poisson, no GR ansatz, no regression."
+    },
+    "invariance_flags": {
+      "invariance_status_json": null,
+      "present": false,
+      "reason_missing": "not provided or not found"
+    },
+    "offdiag_flags": {
+      "APPLICABLE": true,
+      "PASS": true,
+      "offdiag_status_json": "src/gr_strict_pp_scalar/PP_EFE_offdiag_2p1_status_512_STRICT_PP_v2.json",
+      "present": true
+    },
+    "structural_flags": {
+      "APPLICABLE": true,
+      "PASS": true,
+      "present": true,
+      "structural_status_json": "src/gr_strict_pp_scalar/PP_EFE_structural_status_512_STRICT_PP_v1.json"
+    },
+    "tensor_2p1_flags": {
+      "APPLICABLE": true,
+      "PASS": true,
+      "present": true,
+      "tensor_2p1_status_json": "src/gr_strict_pp_scalar/PP_EFE_tensor_2p1_status_512_STRICT_PP_v1.json"
+    }
+  }
+}
