@@ -1,0 +1,56 @@
+{
+  "ALL_PASS": true,
+  "PASS": {
+    "bianchi_status": {
+      "ALL_PASS_bianchi_512_STRICT_PP_v1": true,
+      "PASS_ms080": true,
+      "PASS_strong_pf010": true
+    },
+    "real_EFE_master": {
+      "ALL_PASS_real_EFE_strict_PP_512_v2": true
+    },
+    "scalar_A2b_status": {
+      "ALL_PASS_scalar_A2b_512_STRICT_PP_v1": true,
+      "PASS_ms080": true,
+      "PASS_strong_pf010": true
+    },
+    "scalar_vector_A2b_offdiag": {
+      "ALL_PASS_scalar_vector_A2b_offdiag_512_STRICT_PP_v1": true,
+      "PASS_offdiag_2p1": true,
+      "PASS_scalar_A2b": true
+    },
+    "scalar_vector_status_v2": {},
+    "strongfield_suite": {
+      "ALL_PASS_strongfield_suite_strict_PP_512_v1": true,
+      "PASS_deflection_E2": true,
+      "PASS_master_v3": true,
+      "PASS_perihelion_mass": null,
+      "PASS_perihelion_strong": null,
+      "PASS_shapiro_mass": true,
+      "PASS_shapiro_strong": true,
+      "PASS_tensor_3p1": true
+    },
+    "structural_status": {
+      "ALL_PASS_structural_status_512_STRICT_PP_v1": true,
+      "APPLICABLE": true
+    },
+    "tensor_3p1_status": {
+      "ALL_PASS_EFE_tensor_3p1_strict_PP_512_v1": true,
+      "APPLICABLE": true,
+      "PASS_invariance": null,
+      "PASS_master_v3": true,
+      "PASS_tensor_2p1": true
+    }
+  },
+  "artifacts": {
+    "bianchi_status": "src/gr_strict_pp_scalar/PP_EFE_bianchi_status_512_STRICT_PP_v1.json",
+    "real_EFE_master": "src/gr_strict_pp_scalar/PP_EFE_master_status_512_STRICT_PP_v3.json",
+    "scalar_A2b_status": "src/gr_strict_pp_scalar/PP_EFE_scalar_A2b_status_512_STRICT_PP_v1.json",
+    "scalar_vector_A2b_offdiag": "src/gr_strict_pp_scalar/PP_EFE_scalar_vector_A2b_offdiag_status_512_STRICT_PP_v1.json",
+    "scalar_vector_status_v2": "src/gr_strict_pp_scalar/PP_EFE_scalar_vector_status_512_STRICT_PP_v2.json",
+    "strongfield_suite": "src/gr_strict_pp_scalar/PP_EFE_strongfield_suite_status_512_STRICT_PP_v1.json",
+    "structural_status": "src/gr_strict_pp_scalar/PP_EFE_structural_status_512_STRICT_PP_v1.json",
+    "tensor_3p1_status": "src/gr_strict_pp_scalar/PP_EFE_tensor_3p1_status_512_STRICT_PP_v1.json"
+  },
+  "timestamp_unix": 1766269772.9832008
+}

@@ -1,0 +1,24 @@
+{
+  "H": 512,
+  "PASS": {
+    "ALL_PASS_real_EFE_strict_PP_512_v2": true
+  },
+  "PASS_components": {
+    "PASS_bianchi": true,
+    "PASS_invariance": null,
+    "PASS_offdiag_2p1": true,
+    "PASS_scalar_A2b": true,
+    "PASS_tensor_3p1": true,
+    "PASS_tensor_closure": true
+  },
+  "STRICT_PP": true,
+  "W": 512,
+  "inputs": {
+    "bianchi": "src/gr_strict_pp_scalar/PP_EFE_bianchi_status_512_STRICT_PP_v1.json",
+    "offdiag_2p1": "src/gr_strict_pp_scalar/PP_EFE_offdiag_2p1_status_512_STRICT_PP_v3.json",
+    "require_invariance": false,
+    "scalar_A2b": "src/gr_strict_pp_scalar/PP_EFE_scalar_A2b_status_512_STRICT_PP_v1.json",
+    "tensor_3p1": "src/gr_strict_pp_scalar/PP_EFE_tensor_3p1_status_512_STRICT_PP_v1.json",
+    "tensor_closure": "src/gr_strict_pp_scalar/PP_EFE_tensor_closure_status_512_STRICT_PP_v1.json"
+  }
+}
