@@ -1,0 +1,78 @@
+{
+  "FINAL_PASS_EFE_geometry_operator_512_STRICT_PP_v1": true,
+  "STRICT_PP": true,
+  "adversarial_v6": {
+    "ALL_PASS_adversarial_512_STRICT_PP_v6": true,
+    "adversarial_json": "src/gr_strict_pp_scalar/PP_EFE_adversarial_status_512_STRICT_PP_v6_diag.json",
+    "alt_mask": null,
+    "crossFlow": {
+      "gated_abs_corr_A_same_mask": 0.03976828576081235,
+      "gated_abs_corr_B_same_mask": 0.09111753696912067
+    },
+    "mask": null,
+    "qPermTopK": {
+      "A": {
+        "matched_abs_corr": 0.32158230372682906,
+        "ratio_worst_over_matched": 0.4656612342459581,
+        "worst_abs_corr": 0.1497484124650938
+      },
+      "B": {
+        "matched_abs_corr": 0.32636429195683747,
+        "ratio_worst_over_matched": 0.2644284066738321,
+        "worst_abs_corr": 0.0862999897173799
+      }
+    }
+  },
+  "canonical_artifacts": {
+    "R_A_npz": {
+      "bytes": 8047231,
+      "mtime_epoch": 1766253711.3856335,
+      "path": "src/gr_strict_pp_geom/PP_RicciVolDist_R_512_strong_pf010_STRICT_PP_v1.npz"
+    },
+    "R_B_npz": {
+      "bytes": 8053596,
+      "mtime_epoch": 1766253699.433284,
+      "path": "src/gr_strict_pp_geom/PP_RicciVolDist_R_512_ms080_STRICT_PP_v1.npz"
+    },
+    "T_A_npz": {
+      "bytes": 6763205,
+      "mtime_epoch": 1766026555.1043015,
+      "path": "src/gr_strict_pp_scalar/PP_Tmunu_tracew_edges_512_strong_pf010_STRICT_PP_v3.npz"
+    },
+    "T_B_npz": {
+      "bytes": 6760430,
+      "mtime_epoch": 1766026546.710995,
+      "path": "src/gr_strict_pp_scalar/PP_Tmunu_tracew_edges_512_ms080_STRICT_PP_v3.npz"
+    },
+    "adversarial_json": {
+      "bytes": 11571,
+      "mtime_epoch": 1766346308.1832378,
+      "path": "src/gr_strict_pp_scalar/PP_EFE_adversarial_status_512_STRICT_PP_v6_diag.json"
+    },
+    "flow_A_matched_npz": {
+      "bytes": 1943504,
+      "mtime_epoch": 1766256352.0162313,
+      "path": "src/gr_strict_pp_align/runs/finalleg_twgeom_q9995_v1/PP_T00_flow_fixedGeom_lengths_512_strong_pf010_STRICT_PP_v1.npz"
+    },
+    "flow_B_matched_npz": {
+      "bytes": 1957281,
+      "mtime_epoch": 1766256355.340339,
+      "path": "src/gr_strict_pp_align/runs/finalleg_twgeom_q9995_v1/PP_T00_flow_fixedGeom_lengths_512_ms080_STRICT_PP_v1.npz"
+    },
+    "lengths_A_npz": {
+      "bytes": 17350582,
+      "mtime_epoch": 1766176854.1966057,
+      "path": "src/gr_strict_pp_geom/PP_lengths_doyle_edges_512_strong_pf010_STRICT_PP_v1.npz"
+    },
+    "lengths_B_npz": {
+      "bytes": 19092040,
+      "mtime_epoch": 1766253689.2829866,
+      "path": "src/gr_strict_pp_geom/PP_lengths_doyle_edges_512_ms080_STRICT_PP_v1.npz"
+    }
+  },
+  "elapsed_s": 0.000213623046875,
+  "flows_present": true,
+  "inputs_present": true,
+  "script": "PP_EFE_geometry_operator_final_status_512_STRICT_PP_v1.py",
+  "timestamp_epoch": 1766368343.1413724
+}
