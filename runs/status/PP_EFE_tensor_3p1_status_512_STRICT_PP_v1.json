@@ -1,0 +1,73 @@
+{
+  "timestamp_utc": "2025-12-26T20:45:42Z",
+  "version": "PP_EFE_tensor_3p1_status_512_STRICT_PP_v1",
+  "args": {
+    "H": 512,
+    "W": 512,
+    "device": "gpu",
+    "master_status_json": "src/gr_strict_pp_scalar/PP_EFE_master_status_512_STRICT_PP_v3.json",
+    "tensor_2p1_status_json": "src/gr_strict_pp_scalar/PP_EFE_tensor_2p1_status_512_STRICT_PP_v1.json",
+    "invariance_status_json": null,
+    "allow_na_invariance": true,
+    "output": "runs/status/PP_EFE_tensor_3p1_status_512_STRICT_PP_v1.json"
+  },
+  "inputs": {
+    "master_status_json": "src/gr_strict_pp_scalar/PP_EFE_master_status_512_STRICT_PP_v3.json",
+    "tensor_2p1_status_json": "src/gr_strict_pp_scalar/PP_EFE_tensor_2p1_status_512_STRICT_PP_v1.json",
+    "invariance_status_json": null
+  },
+  "PASS": {
+    "APPLICABLE": true,
+    "PASS_master_v3": true,
+    "PASS_tensor_2p1": true,
+    "PASS_invariance": null,
+    "ALL_PASS_EFE_tensor_3p1_strict_PP_512_v1": true
+  },
+  "resolved": {
+    "master": {
+      "label": "master",
+      "keys_present": [
+        "ALL_PASS_real_EFE_strict_PP_512_v2"
+      ],
+      "used_key": "ALL_PASS_real_EFE_strict_PP_512_v2",
+      "used_value_raw": true,
+      "used_value_bool": true
+    },
+    "tensor_2p1": {
+      "label": "tensor_2p1",
+      "keys_present": [
+        "ALL_PASS_tensor_2p1_status_512_STRICT_PP_v1",
+        "APPLICABLE",
+        "PASS_offdiag_2p1_all_cases",
+        "PASS_structural_all_cases"
+      ],
+      "used_key": null,
+      "used_value_bool": true,
+      "fallback": "any_true_over_pass_dict",
+      "boolish_pairs": [
+        [
+          "ALL_PASS_tensor_2p1_status_512_STRICT_PP_v1",
+          true
+        ],
+        [
+          "APPLICABLE",
+          true
+        ],
+        [
+          "PASS_offdiag_2p1_all_cases",
+          true
+        ],
+        [
+          "PASS_structural_all_cases",
+          true
+        ]
+      ]
+    },
+    "invariance": {
+      "label": "invariance",
+      "note": "not provided"
+    }
+  },
+  "failures": [],
+  "notes": []
+}

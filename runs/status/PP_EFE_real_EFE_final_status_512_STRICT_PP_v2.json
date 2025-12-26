@@ -1,0 +1,12 @@
+{
+  "FINAL_PASS_real_EFE_512_STRICT_PP_v2": true,
+  "N_expected": 262144,
+  "STRICT_PP": true,
+  "elapsed_s": 5.316734313964844e-05,
+  "input_real_efe_status_json": "runs/status/PP_EFE_real_EFE_status_512_STRICT_PP_v2.json",
+  "pass_flags_used": {
+    "ALL_PASS_real_EFE_strict_PP_512_v2": true
+  },
+  "reasoning": "Used PASS['ALL_PASS_real_EFE_strict_PP_512_v2'] as the canonical overall gate.",
+  "script": "PP_EFE_real_EFE_final_status_512_STRICT_PP_v2.py"
+}
