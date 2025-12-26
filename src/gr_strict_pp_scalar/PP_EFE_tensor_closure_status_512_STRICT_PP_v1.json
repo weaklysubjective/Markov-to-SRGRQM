@@ -1,0 +1,50 @@
+{
+  "H": 512,
+  "PASS": {
+    "PASS_deflection_gated": true,
+    "PASS_offdiag_gated": true,
+    "PASS_scalar_EFE00_required": true,
+    "PASS_vector_required": true,
+    "overall_PASS_tensor_closure_evidence_512_strict_PP_v1": true
+  },
+  "STRICT_PP": true,
+  "W": 512,
+  "components": {
+    "deflection": {
+      "APPLICABLE": true,
+      "PASS": true,
+      "present": true,
+      "reason": "STRICT PP deflection E2 status (512\u00d7512). Aggregates v7 late-window deflection-front artifacts for ms080 and strong_pf010. No new observables, no PDE/Poisson, no GR ansatz, no regression."
+    },
+    "offdiag": {
+      "APPLICABLE": true,
+      "PASS": true,
+      "pass_key_used": "offdiag_flags.PASS",
+      "present": true
+    },
+    "scalar": {
+      "PASS": true,
+      "pass_key_used": "overall_PASS_scalar_EFE00_strict_PP_v1"
+    },
+    "vector": {
+      "PASS": true,
+      "pass_key_used": "overall_PASS_vector_EFE_strict_PP_v1"
+    }
+  },
+  "device_info": {
+    "cuda_device_name": "AMD Radeon PRO W6800",
+    "device_requested": "gpu",
+    "gpu_available": true
+  },
+  "inputs": {
+    "deflection_status_json": "src/gr_strict_pp_scalar/PP_deflection_E2_status_512_STRICT_PP_v1.json",
+    "offdiag_status_json": "src/gr_strict_pp_scalar/PP_EFE_offdiag_2p1_status_512_STRICT_PP_v2.json",
+    "scalar_status_json": "src/gr_strict_pp_scalar/PP_scalar_EFE00_status_512_strict_PP_v1.json",
+    "vector_status_json": "src/gr_strict_pp_vector/PP_vector_EFE_status_512_strict_PP_v1.json"
+  },
+  "notes": "STRICT PP tensor-closure evidence status @512 (v1). This is an aggregation-only gate over existing PASS/FAIL artifacts: scalar EFE00 status + vector status + hardened offdiag status + E2 deflection status. No new observables, no PDE/Laplacian/Poisson, no GR ansatz, no regression.",
+  "policy": {
+    "allow_na_deflection": false,
+    "allow_na_offdiag": false
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "H": 512,
+  "W": 512,
+  "inputs": {
+    "J_threshold": 0.03,
+    "blocks": [
+      "src/gr_strict_pp_vector/PP_offdiag_Einstein_block_2p1_512_ms080_v3.json",
+      "src/gr_strict_pp_vector/PP_offdiag_Einstein_block_2p1_512_strong_pf010_v3.json"
+    ],
+    "ring_flux": [
+      "src/gr_strict_pp_vector/PP_offdiag_ring_momentum_flux_512_ms080_v3.json",
+      "src/gr_strict_pp_vector/PP_offdiag_ring_momentum_flux_512_strong_pf010_v3.json"
+    ]
+  },
+  "notes": "STRICT PP off-diag 2+1 status (512x512) v2. Strengthens offdiag evidence by requiring TWO independent observables: (1) Einstein-block offdiag artifact PASS and (2) ring-band momentum flux smallness (J_net_over_abs) and/or PASS. No new observables, no PDE/Poisson, no GR ansatz, no regression.",
+  "offdiag_flags": {
+    "APPLICABLE": true,
+    "PASS": true,
+    "present": true
+  },
+  "per_case": [
+    {
+      "APPLICABLE": true,
+      "PASS": true,
+      "block": {
+        "PASS": true,
+        "pass_key_used": "PASS_offdiag_2p1_toy_diag_v3",
+        "path": "src/gr_strict_pp_vector/PP_offdiag_Einstein_block_2p1_512_ms080_v3.json",
+        "present": true
+      },
+      "case": "ms080",
+      "reason": "ok_block=True ok_ring=True ok_J=True (J_threshold=0.03)",
+      "ring_flux": {
+        "J_net_over_abs": 0.015958287249170484,
+        "J_threshold": 0.03,
+        "PASS": null,
+        "pass_key_used": "PASS/*",
+        "path": "src/gr_strict_pp_vector/PP_offdiag_ring_momentum_flux_512_ms080_v3.json",
+        "present": true
+      }
+    },
+    {
+      "APPLICABLE": true,
+      "PASS": true,
+      "block": {
+        "PASS": true,
+        "pass_key_used": "PASS_offdiag_2p1_toy_diag_v3",
+        "path": "src/gr_strict_pp_vector/PP_offdiag_Einstein_block_2p1_512_strong_pf010_v3.json",
+        "present": true
+      },
+      "case": "strong_pf010",
+      "reason": "ok_block=True ok_ring=True ok_J=True (J_threshold=0.03)",
+      "ring_flux": {
+        "J_net_over_abs": 0.01775147928994083,
+        "J_threshold": 0.03,
+        "PASS": null,
+        "pass_key_used": "PASS/*",
+        "path": "src/gr_strict_pp_vector/PP_offdiag_ring_momentum_flux_512_strong_pf010_v3.json",
+        "present": true
+      }
+    }
+  ]
+}

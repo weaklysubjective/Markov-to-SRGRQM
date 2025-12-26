@@ -1,0 +1,47 @@
+{
+  "H": 512,
+  "PASS": {
+    "ALL_PASS_scalar_A2b_512_STRICT_PP_v1": true,
+    "PASS_ms080": true,
+    "PASS_strong_pf010": true
+  },
+  "STRICT_PP": true,
+  "W": 512,
+  "cases": {
+    "ms080": {
+      "PASS": true,
+      "core": {
+        "DeltaT00_mad": 0.003826640663775753,
+        "DeltaT00_max": 0.05400725536635756,
+        "DeltaT00_min": -0.07194085407156604,
+        "G00_max": 6.256026043764043,
+        "G00_min": -3.6475846940499475,
+        "corr_G00_vs_kD": 0.49941817523591253,
+        "kappa_est_med": 403.70297044348314,
+        "mad_G00": 1.5979213598538888,
+        "mad_diff": 1.1548578830202707,
+        "mad_kD": 1.5448262027860937,
+        "n_good": 80
+      },
+      "path": "src/gr_strict_pp_scalar/PP_EFE_align_G00logpi_bg_on_curved_vs_DeltaPi_512_ms080_STRICT_PP_v1.json"
+    },
+    "strong_pf010": {
+      "PASS": true,
+      "core": {
+        "DeltaT00_mad": 0.0027048703977400725,
+        "DeltaT00_max": 0.009219041143435618,
+        "DeltaT00_min": -0.03971166994114563,
+        "G00_max": 4.433708485170953,
+        "G00_min": -2.60371287204822,
+        "corr_G00_vs_kD": 0.5658338599046961,
+        "kappa_est_med": 489.4231814463937,
+        "mad_G00": 1.5009980069020374,
+        "mad_diff": 0.8995400108667208,
+        "mad_kD": 1.3238262754621188,
+        "n_good": 80
+      },
+      "path": "src/gr_strict_pp_scalar/PP_EFE_align_G00logpi_bg_on_curved_vs_DeltaPi_512_strong_pf010_STRICT_PP_v1.json"
+    }
+  },
+  "route": "A2b (same curved support; background-on-curved; align G00proxy vs DeltaT00=DeltaPi on topk80)"
+}

@@ -1,0 +1,22 @@
+{
+  "H": 512,
+  "PASS": {
+    "ALL_PASS_bianchi_512_STRICT_PP_v1": true,
+    "PASS_ms080": true,
+    "PASS_strong_pf010": true
+  },
+  "STRICT_PP": true,
+  "W": 512,
+  "cases": {
+    "ms080": {
+      "PASS": true
+    },
+    "strong_pf010": {
+      "PASS": true
+    }
+  },
+  "inputs": {
+    "ms080": "src/gr_strict_pp_scalar/PP_EFE_bianchi_audit_512_ms080_v2.json",
+    "strong_pf010": "src/gr_strict_pp_scalar/PP_EFE_bianchi_audit_512_strong_pf010_v2.json"
+  }
+}
